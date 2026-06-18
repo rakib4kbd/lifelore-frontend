@@ -7,7 +7,7 @@ import { auth } from "@/lib/auth";
 export async function POST() {
   try {
     const headersList = await headers();
-    const { user } = await auth.api.getSession({ headers: await headers() });
+    const user = await auth.api.getSession({ headers: await headers() });
     const origin = headersList.get("origin");
 
     // Create Checkout Sessions from body params.

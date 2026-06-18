@@ -6,6 +6,7 @@ import DashboardAside from "@/components/Dashboard/DashboardAside";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { roleAccess } from "@/lib/roleAccess";
+import AdminDashboardAside from "@/components/Dashboard/AdminDashboardAside";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,6 +30,8 @@ export default async function RootLayout({ children }) {
     redirect("/auth/login");
   }
 
+  await roleAccess("admin");
+
   return (
     <html
       lang="en"
@@ -38,7 +41,7 @@ export default async function RootLayout({ children }) {
       <body className="">
         <div className="min-h-screen flex flex-col bg-[#FDFCFB] text-[#1A1A1A] dark:bg-editorial-dark-bg dark:text-editorial-dark-text transition-colors duration-300 font-sans selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black">
           <div className="flex mx-auto w-7xl max-w-7xl my-5 justify-between gap-2">
-            <DashboardAside user={user} />
+            <AdminDashboardAside user={user} />
             {children}
           </div>
         </div>

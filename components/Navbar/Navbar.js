@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Moon, ChevronDown } from "lucide-react";
 import { authClient, signOut, useSession } from "@/lib/auth-client";
 import { LogOut } from "lucide-react";
@@ -11,14 +11,17 @@ import { UserIcon } from "lucide-react";
 import { useState } from "react";
 import showToast from "@/lib/showToast";
 import { Award } from "lucide-react";
+import { Shield } from "lucide-react";
 
 export default function Navbar() {
   const { data, isPending } = useSession();
   const user = data?.user;
   const pathname = usePathname();
+  const router = useRouter();
 
   const handleLogout = async () => {
     const { data, error } = await signOut();
+    router.push("/auth/login");
     if (error) {
       showToast("Error occurred while logging out:", error);
     }
@@ -92,22 +95,24 @@ export default function Navbar() {
             </Link>
           ))}
 
-          {user && !user.isPremium && (
-            <Link
-              href={"/pricing"}
-              className={`flex items-center gap-1 py-1 text-[11px] font-bold uppercase tracking-widest transition-all cursor-pointer text-warning`}
-            >
-              <Award className="w-3.5 h-3.5" />
-              Upgrade
-            </Link>
-          )}
+          {(user && !user.isPremium) ||
+            (user && user.role === "admin" && (
+              <Link
+                href={"/pricing"}
+                className={`flex items-center gap-1 py-1 text-[11px] font-bold uppercase tracking-widest transition-all cursor-pointer text-warning`}
+              >
+                <Award className="w-3.5 h-3.5" />
+                Upgrade
+              </Link>
+            ))}
 
-          {user && user.isPremium && (
-            <div className="flex items-center gap-1 px-3 py-1 bg-black text-white dark:bg-white dark:text-black text-[9px] font-black uppercase tracking-wider border border-black dark:border-white">
-              <Award className="w-3 h-3" />
-              Premium Edition
-            </div>
-          )}
+          {(user && user.isPremium) ||
+            (user && user.role === "admin" && (
+              <div className="flex items-center gap-1 px-3 py-1 bg-black text-white dark:bg-white dark:text-black text-[9px] font-black uppercase tracking-wider border border-black dark:border-white">
+                <Award className="w-3 h-3" />
+                Premium Edition
+              </div>
+            ))}
         </div>
 
         {/* Right Side */}
@@ -191,7 +196,7 @@ export default function Navbar() {
                       </Link>
 
                       <Link
-                        href="/dashboard"
+                        href="/dashboard/overview"
                         onClick={() => {
                           setDropdownOpen(false);
                         }}
@@ -200,6 +205,19 @@ export default function Navbar() {
                         <LayoutDashboard className="w-3.5 h-3.5" />
                         Dashboard Overview
                       </Link>
+
+                      {user.role === "admin" && (
+                        <Link
+                          href="/admin/overview"
+                          onClick={() => {
+                            setDropdownOpen(false);
+                          }}
+                          className="w-full text-left flex items-center gap-2 px-3 py-2 text-[11px] uppercase tracking-wider font-bold text-neutral-700 dark:text-neutral-300 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all cursor-pointer"
+                        >
+                          <Shield className="w-3.5 h-3.5" />
+                          Admin Dashboard
+                        </Link>
+                      )}
 
                       <hr className="border-black dark:border-white/50 my-1" />
 

@@ -7,9 +7,6 @@ const DashboardPage = async () => {
   if (!user) {
     redirect("/login");
   }
-  if (user.role === "admin") {
-    redirect("/dashboard/admin/overview");
-  }
   redirect("/dashboard/overview");
 };
 

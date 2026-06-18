@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth";
-import { fetchLessons } from "@/lib/fetchLessons";
+import { fetchPublicLessons } from "@/lib/fetchLessons";
 import { Lock } from "lucide-react";
 import { Calendar } from "lucide-react";
 import { headers } from "next/headers";
@@ -8,8 +8,9 @@ import Link from "next/link";
 import React from "react";
 
 const PublicLessonsPage = async () => {
-  const user = await auth.api.getSession({ headers: await headers() });
-  const lessons = await fetchLessons();
+  const { user } =
+    (await auth.api.getSession({ headers: await headers() })) || {};
+  const lessons = await fetchPublicLessons();
   const total = lessons.length;
   return (
     <div className="space-y-8 my-20 max-w-7xl mx-auto">
@@ -56,9 +57,12 @@ const PublicLessonsPage = async () => {
                   <p className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 max-w-[200px] mt-2">
                     Membership log access key requested for this lesson sheet.
                   </p>
-                  <button className="mt-5 px-6 py-2 border-2 border-black dark:border-white bg-black hover:bg-transparent text-white hover:text-black dark:bg-white dark:hover:bg-transparent dark:text-black dark:hover:text-white text-[10px] uppercase font-black tracking-widest rounded-none transition-colors cursor-pointer">
+                  <Link
+                    href="/pricing"
+                    className="mt-5 px-6 py-2 border-2 border-black dark:border-white bg-black hover:bg-transparent text-white hover:text-black dark:bg-white dark:hover:bg-transparent dark:text-black dark:hover:text-white text-[10px] uppercase font-black tracking-widest rounded-none transition-colors cursor-pointer"
+                  >
                     Unlock with Premium ⭐
-                  </button>
+                  </Link>
                 </div>
               )}
 

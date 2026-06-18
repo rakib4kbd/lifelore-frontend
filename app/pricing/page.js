@@ -4,19 +4,17 @@ import { Award } from "lucide-react";
 import { CreditCard } from "lucide-react";
 import { Layers } from "lucide-react";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import React from "react";
 
 const PricingPage = async () => {
-  const { user } = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const { user } =
+    (await auth.api.getSession({
+      headers: await headers(),
+    })) || {};
 
   if (!user) {
-    return (
-      <div className="text-center py-12">
-        Please log in to view pricing options.
-      </div>
-    );
+    redirect("/auth/login");
   }
 
   const comparisonRows = [

@@ -1,11 +1,21 @@
+import DetailedLessonInteractionButtons from "@/components/Lessons/DetailedLesson/DetailedLessonInteractionButtons";
 import { auth } from "@/lib/auth";
-import { fetchLessonById } from "@/lib/fetchLessons";
+import {
+  fetchLessonById,
+  fetchLessonCountByCreatorId,
+} from "@/lib/fetchLessons";
 import { Clock } from "lucide-react";
 import { Brain } from "lucide-react";
 import { Heart } from "lucide-react";
 import { AlertTriangle } from "lucide-react";
 import { Send } from "lucide-react";
 import { X } from "lucide-react";
+import { ArrowUpRightFromSquare } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+import { Eye } from "lucide-react";
+import { ChevronRightCircle } from "lucide-react";
+import { ChevronsRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Trash2 } from "lucide-react";
 import { MessageCircle } from "lucide-react";
 import { Share2 } from "lucide-react";
@@ -13,12 +23,15 @@ import { ThumbsUp } from "lucide-react";
 import { Lock } from "lucide-react";
 import { ChevronLeft } from "lucide-react";
 import { headers } from "next/headers";
+import Image from "next/image";
+import Link from "next/link";
 
 const LessonDetailPage = async ({ params }) => {
   const { user } = await auth.api.getSession({ headers: await headers() });
   const { id } = await params;
   const lesson = await fetchLessonById(id);
 
+  const { count } = await fetchLessonCountByCreatorId(lesson.creatorId);
   const isBlurLocked =
     lesson.accessLevel === "premium" &&
     (!user || (!user?.isPremium && user.role !== "admin"));
@@ -28,17 +41,16 @@ const LessonDetailPage = async ({ params }) => {
   const rawReadTime = Math.ceil(wordsCount / 180);
   const estimatedReadingTime = rawReadTime < 1 ? 1 : rawReadTime;
 
-  const selectedReaction = null;
   return (
-    <div className="space-y-8 pb-16 max-w-3xl mx-auto text-left relative">
+    <div className="space-y-8 my-10 max-w-3xl mx-auto text-left relative">
       {/* Back button link */}
-      <button
-        //
+      <Link
+        href="/lessons"
         className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-neutral-500 hover:text-black dark:hover:text-white border-b-2 border-transparent hover:border-black dark:hover:border-white transition-all cursor-pointer"
       >
         <ChevronLeft className="w-4 h-4" />
         Return to Insights Ledger
-      </button>
+      </Link>
       {/* Title Details Header */}
       <div className="space-y-4">
         <div className="flex flex-wrap items-center gap-2.5">
@@ -52,6 +64,10 @@ const LessonDetailPage = async ({ params }) => {
             <Clock className="w-3.5 h-3.5" />
             {estimatedReadingTime} min study cycle
           </span>
+          <span className="flex items-center gap-1 text-[9px] font-mono uppercase font-black text-neutral-500 ms-auto">
+            <Eye className="w-3.5 h-3.5" />
+            {Math.floor(Math.random() * 10000)} views
+          </span>
         </div>
 
         <h1 className="text-3xl sm:text-5xl font-serif font-black text-black dark:text-white tracking-tight leading-tight">
@@ -61,31 +77,40 @@ const LessonDetailPage = async ({ params }) => {
         {/* Creator profile section */}
         <div className="flex items-center justify-between flex-wrap gap-4 pt-2 border-b-2 border-black dark:border-white pb-4">
           <div className="flex items-center gap-3">
-            <img
-              src={
-                lesson.creatorPhoto ||
-                "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
-              }
-              alt={lesson.creatorName}
-              className="w-10 h-10 rounded-full object-cover border border-black dark:border-white"
-            />
+            <figure className="relative w-10 h-10">
+              <Image
+                src={
+                  lesson.creatorPhoto ||
+                  "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
+                }
+                alt={lesson.creatorName}
+                fill
+                className="w-10 h-10 rounded-full object-cover border border-black dark:border-white"
+              />
+            </figure>
             <div>
               <p className="font-serif font-black text-sm text-black dark:text-white">
                 {lesson.creatorName}
               </p>
-              <p className="text-[10px] uppercase font-black tracking-widest text-[#121212] dark:text-white/70">
-                Verified Manuscript Contributor
+              <p className=" dark:bg-editorial-dark-bg rounded-none flex items-center gap-0 text-[10px] uppercase font-black tracking-widest text-[#121212] dark:text-white/50">
+                View All Lessons by this author
+                <ChevronRight className="w-4 h-4" />
               </p>
             </div>
           </div>
-          <span className="text-[10px] font-mono uppercase font-black text-neutral-500">
-            Published:{" "}
-            {new Date(lesson.createdAt).toLocaleDateString(undefined, {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })}
-          </span>
+          <div className="flex flex-col items-end">
+            <span className="text-[10px] font-mono uppercase font-black text-neutral-500">
+              Published:{" "}
+              {new Date(lesson.createdAt).toLocaleDateString(undefined, {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
+            </span>
+            <span className="text-[10px] font-mono uppercase font-black text-neutral-500">
+              {count} Total Lessons
+            </span>
+          </div>
         </div>
       </div>
       {/* CORE DESCRIPTION CONTENT (OR BLUR HOOKS FOR FREE USERS!) */}
@@ -145,70 +170,7 @@ const LessonDetailPage = async ({ params }) => {
           </div>
         )}
       </div>
-      {/* DYNAMIC CLUSTERS OF REACTION BUTTONS, BOOKMARKS, REPORT, AND CLIPBOARD SHARING */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b-2 border-black dark:border-white py-4">
-        {/* Interaction emojis group */}
-        <div className="flex items-center gap-2">
-          <button
-            //
-            className={`px-4 py-2 border-2 border-black text-[10px] font-black uppercase tracking-widest flex items-center gap-2 rounded-none transition-all cursor-pointer ${
-              selectedReaction === "Inspiring"
-                ? "bg-black text-white dark:bg-white dark:text-black"
-                : "bg-white dark:bg-[#121212] text-black dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800"
-            }`}
-          >
-            <Brain className="w-3.5 h-3.5" />
-            <span>💡 Inspiring ({lesson.likesCount})</span>
-          </button>
-
-          <button
-            //
-            className={`px-4 py-2 border-2 border-black text-[10px] font-black uppercase tracking-widest flex items-center gap-2 rounded-none transition-all cursor-pointer ${
-              selectedReaction === "Helpful"
-                ? "bg-black text-white dark:bg-white dark:text-black"
-                : "bg-white dark:bg-[#121212] text-black dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800"
-            }`}
-          >
-            <ThumbsUp className="w-3.5 h-3.5" />
-            <span>👍 Helpful</span>
-          </button>
-        </div>
-
-        {/* Bookmark, Share, and Flags */}
-        <div className="flex items-center gap-2">
-          {/* Favorite toggle bookmark */}
-          <button
-            //
-            className={`p-2.5 border-2 border-black rounded-none transition-all cursor-pointer ${
-              lesson.isFavorited
-                ? "bg-black text-white dark:bg-white dark:text-black"
-                : "bg-white dark:bg-[#121212] text-black dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800"
-            }`}
-            title="Bookmark lesson"
-          >
-            <Heart
-              className={`w-4 h-4 ${lesson.isFavorited ? "fill-current" : ""}`}
-            />
-          </button>
-
-          {/* Share */}
-          <button
-            //
-            className="p-2.5 border-2 border-black bg-white dark:bg-[#121212] text-black dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-none transition-colors cursor-pointer"
-            title="Copy share path links"
-          >
-            <Share2 className="w-4 h-4" />
-          </button>
-
-          {/* Flag Report icon */}
-          <button
-            className="p-2.5 border-2 border-black bg-white dark:bg-[#121212] text-neutral-400 dark:text-neutral-500 hover:text-rose-600 rounded-none transition-colors cursor-pointer"
-            title="Flag as inappropriate"
-          >
-            <AlertTriangle className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
+      <DetailedLessonInteractionButtons lesson={lesson} />
     </div>
   );
 };

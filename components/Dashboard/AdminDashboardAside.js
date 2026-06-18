@@ -13,35 +13,36 @@ import { ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const DashboardAside = ({ user }) => {
-  const dashboardNavigation = [
+const AdminDashboardAside = ({ user }) => {
+  console.log(user);
+  const adminDashboardNavigation = [
     {
-      label: "Overview",
-      href: "/dashboard/overview",
+      label: "System Overview",
+      href: "/admin/overview",
       icon: BarChart,
       key: "overview",
     },
     {
-      label: "Log New Lesson",
-      href: "/dashboard/add-lesson",
-      icon: CirclePlus,
+      label: "Manage Users Table",
+      href: "/admin/users",
+      icon: Users,
       key: "users",
     },
     {
-      label: "My Wisdom Ledger",
-      href: "/dashboard/my-lessons",
-      icon: FileText,
+      label: "Moderation Files",
+      href: "/admin/moderation",
+      icon: BookOpen,
       key: "moderation",
     },
     {
-      label: "My Saved Wisdom",
-      href: "/dashboard/saved-lessons",
-      icon: Heart,
+      label: "Reported Content",
+      href: "/admin/reports",
+      icon: ShieldAlert,
       key: "reports",
     },
     {
-      label: "Manage Settings",
-      href: "/dashboard/settings",
+      label: "Moderator Settings",
+      href: "/admin/settings",
       icon: Settings,
       key: "profile",
     },
@@ -60,20 +61,16 @@ const DashboardAside = ({ user }) => {
             <h3 className="font-serif font-black text-xs uppercase tracking-tight truncate">
               {user.name}
             </h3>
-            {user?.isPremium || user?.role === "admin" ? (
-              <span className="inline-flex items-center gap-0.5 px-2 py-0.5 bg-amber-500 text-slate-950 text-[8px] font-black uppercase tracking-widest mt-1 border border-black">
-                PREMIUM SCRIBE
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-0.5 px-2 py-0.5 bg-neutral-800 text-white dark:bg-neutral-200 dark:text-black text-[8px] font-black uppercase tracking-widest mt-1">
-                BASIC MEMBER
+            {user?.role === "admin" && (
+              <span className="px-2 py-0.5 bg-rose-600 text-white border border-black text-[8px] font-black uppercase tracking-widest block w-max mt-0.5">
+                ADMIN CONTROL
               </span>
             )}
           </div>
         </div>
 
         {/* Navigation Admin Controls */}
-        {dashboardNavigation.map((item) => {
+        {adminDashboardNavigation.map((item) => {
           const Icon = item.icon;
 
           const isActive =
@@ -96,29 +93,9 @@ const DashboardAside = ({ user }) => {
             </Link>
           );
         })}
-
-        {/* Quick Help box */}
-        {!user?.isPremium && (
-          <div className="p-4 rounded-none bg-[#F9F7F2] dark:bg-editorial-dark-card/30 border-2 border-black text-xs hidden md:block space-y-2">
-            <h4 className="font-serif font-black text-[#121212] dark:text-white flex items-center gap-1 uppercase tracking-tight text-sm">
-              <Award className="w-4 h-4" />
-              Upgrade to Premium
-            </h4>
-            <p className="text-[10px] text-neutral-600 dark:text-neutral-400 leading-relaxed font-serif italic">
-              Unlock unlimited folder slots, premium manuscript badges, and
-              priority view list boosts for lifetime.
-            </p>
-            <Link
-              href="/pricing"
-              className="btn w-full py-2 border border-black bg-black hover:bg-[#FAF9F6] text-white hover:text-black text-[9px] uppercase font-black tracking-widest transition-colors cursor-pointer"
-            >
-              Examine Pricing Plans
-            </Link>
-          </div>
-        )}
       </aside>
     </div>
   );
 };
 
-export default DashboardAside;
+export default AdminDashboardAside;

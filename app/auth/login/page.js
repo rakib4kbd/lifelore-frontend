@@ -7,8 +7,10 @@ import { ShieldCheck } from "lucide-react";
 import { Camera } from "lucide-react";
 import { authClient, signIn, signUp } from "@/lib/auth-client";
 import showToast from "@/lib/showToast";
+import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
+  const router = useRouter();
   const demoAccounts = [
     {
       name: "Global Admin",
@@ -37,12 +39,12 @@ const LoginPage = () => {
         email: acc.email,
         password: acc.pass,
       });
-
-      // if (data.user.role === "admin") {
-      //   navigateTo("admin-dashboard");
-      // } else {
-      //   navigateTo("dashboard");
-      // }
+      console.log(data);
+      if (data.user.role === "admin") {
+        router.push("/admin/overview");
+      } else {
+        router.push("/dashboard/overview");
+      }
     } catch (e) {
       showToast(e.message, "error");
     } finally {
@@ -80,6 +82,7 @@ const LoginPage = () => {
       const { data, error } = await signIn.email({
         email: email,
         password: password,
+        callbackURL: "/dashboard",
       });
       if (error) {
         showToast(error.message);
@@ -92,7 +95,7 @@ const LoginPage = () => {
         email: email,
         password: password,
         image: photoURL,
-        // callbackURL: "/dashboard",
+        callbackURL: "/dashboard",
       });
       if (error) {
         showToast(error.message);
