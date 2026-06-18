@@ -44,7 +44,7 @@ export default function Navbar() {
     },
     {
       label: "Public Lessons",
-      navigation: "/public-lessons",
+      navigation: "/lessons",
       isPrivate: false,
     },
   ];

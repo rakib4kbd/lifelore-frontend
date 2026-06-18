@@ -4,6 +4,7 @@ import { BarChart } from "lucide-react";
 import { BookOpen } from "lucide-react";
 import { Settings } from "lucide-react";
 import { FileText } from "lucide-react";
+import { Award } from "lucide-react";
 import { CirclePlus } from "lucide-react";
 import { Heart } from "lucide-react";
 import { ShieldAlert } from "lucide-react";
@@ -157,6 +158,26 @@ const DashboardAside = ({ user }) => {
                 </Link>
               );
             })}
+
+        {/* Quick Help box */}
+        {!user?.isPremium && (
+          <div className="p-4 rounded-none bg-[#F9F7F2] dark:bg-editorial-dark-card/30 border-2 border-black text-xs hidden md:block space-y-2">
+            <h4 className="font-serif font-black text-[#121212] dark:text-white flex items-center gap-1 uppercase tracking-tight text-sm">
+              <Award className="w-4 h-4" />
+              Upgrade to Premium
+            </h4>
+            <p className="text-[10px] text-neutral-600 dark:text-neutral-400 leading-relaxed font-serif italic">
+              Unlock unlimited folder slots, premium manuscript badges, and
+              priority view list boosts for lifetime.
+            </p>
+            <Link
+              href="/pricing"
+              className="btn w-full py-2 border border-black bg-black hover:bg-[#FAF9F6] text-white hover:text-black text-[9px] uppercase font-black tracking-widest transition-colors cursor-pointer"
+            >
+              Examine Pricing Plans
+            </Link>
+          </div>
+        )}
       </aside>
     </div>
   );

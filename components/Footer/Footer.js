@@ -35,7 +35,7 @@ const FooterSection = () => {
             </li>
             <li>
               <Link
-                href="/public-lessons"
+                href="/lessons"
                 className="hover:text-black dark:hover:text-white transition-colors cursor-pointer text-left"
               >
                 INSIGHTS REGISTRY

@@ -71,7 +71,6 @@ const LoginPage = () => {
   const onSubmit = async (formData) => {
     setLoading(true);
 
-    console.log("Form Data:", formData);
     const { name, email, password, photoURL } = formData;
 
     if (mode === "login") {

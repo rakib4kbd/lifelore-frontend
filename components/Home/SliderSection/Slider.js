@@ -30,7 +30,7 @@ const Slider = () => {
       accent:
         "bg-emerald-600/10 text-emerald-600 dark:text-emerald-400 border-emerald-200/50",
       cta: "Explore Public Archives",
-      action: () => navigateTo("public-lessons"),
+      action: () => navigateTo("lessons"),
     },
     {
       title: "Unlock Advanced Mental Models",
@@ -92,7 +92,7 @@ const Slider = () => {
             </button>
 
             <button
-              onClick={() => navigateTo("public-lessons")}
+              onClick={() => navigateTo("lessons")}
               className="px-5 py-3 border-2 border-neutral-300 dark:border-neutral-700 hover:border-black dark:hover:border-white bg-transparent text-neutral-800 dark:text-neutral-200 text-[11px] uppercase tracking-widest font-bold transition-colors cursor-pointer rounded-none"
             >
               Inspect Public Library
