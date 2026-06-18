@@ -52,7 +52,7 @@ export default function Navbar() {
   const filteredLinks = navLinks.filter((link) => {
     if (link.isPrivate && !user) return false;
 
-    if (link.freeOnly && user?.plan !== "free") {
+    if (link.freeOnly && user.isPremium) {
       return false;
     }
 
@@ -92,17 +92,17 @@ export default function Navbar() {
             </Link>
           ))}
 
-          {user && user?.plan === "free" && (
+          {user && !user.isPremium && (
             <Link
               href={"/pricing"}
-              className={`flex items-center gap-1 py-1 text-[11px] font-bold uppercase tracking-widest transition-all cursor-pointer `}
+              className={`flex items-center gap-1 py-1 text-[11px] font-bold uppercase tracking-widest transition-all cursor-pointer text-warning`}
             >
               <Award className="w-3.5 h-3.5" />
               Upgrade
             </Link>
           )}
 
-          {user && user?.plan === "premium" && (
+          {user && user.isPremium && (
             <div className="flex items-center gap-1 px-3 py-1 bg-black text-white dark:bg-white dark:text-black text-[9px] font-black uppercase tracking-wider border border-black dark:border-white">
               <Award className="w-3 h-3" />
               Premium Edition

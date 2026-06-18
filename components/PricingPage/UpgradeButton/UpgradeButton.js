@@ -7,7 +7,7 @@ import React, { useState } from "react";
 const UpgradeButton = ({ user }) => {
   return (
     <div className="pt-8 relative z-10">
-      {user && user?.plan === "premium" ? (
+      {user && user?.isPremium ? (
         <div className="w-full text-center py-3.5 border-2 border-black bg-black text-white text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-2">
           <Award className="w-4 h-4 text-white" />
           VERIFIED LIFETIME PRESTIGE CHARTERED

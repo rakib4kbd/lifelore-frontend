@@ -11,6 +11,14 @@ const PricingPage = async () => {
     headers: await headers(),
   });
 
+  if (!user) {
+    return (
+      <div className="text-center py-12">
+        Please log in to view pricing options.
+      </div>
+    );
+  }
+
   const comparisonRows = [
     {
       name: "Max Lessons Creation",
