@@ -4,18 +4,25 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Moon, ChevronDown } from "lucide-react";
-import { useSession } from "@/lib/auth-client";
+import { authClient, signOut, useSession } from "@/lib/auth-client";
 import { LogOut } from "lucide-react";
 import { LayoutDashboard } from "lucide-react";
 import { UserIcon } from "lucide-react";
 import { useState } from "react";
+import showToast from "@/lib/showToast";
+import { Award } from "lucide-react";
 
 export default function Navbar() {
   const { data, isPending } = useSession();
   const user = data?.user;
   const pathname = usePathname();
 
-  const handleLogout = () => {};
+  const handleLogout = async () => {
+    const { data, error } = await signOut();
+    if (error) {
+      showToast("Error occurred while logging out:", error);
+    }
+  };
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -40,18 +47,12 @@ export default function Navbar() {
       navigation: "/public-lessons",
       isPrivate: false,
     },
-    {
-      label: "Pricing",
-      navigation: "/pricing",
-      isPrivate: true,
-      freeOnly: true,
-    },
   ];
 
   const filteredLinks = navLinks.filter((link) => {
     if (link.isPrivate && !user) return false;
 
-    if (link.freeOnly && user?.plan !== "FREE") {
+    if (link.freeOnly && user?.plan !== "free") {
       return false;
     }
 
@@ -64,7 +65,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-4">
           <div className="flex items-center gap-4 cursor-pointer">
-            <div className="text-xl md:text-2xl font-black font-semibold tracking-tighter uppercase italic px-4 py-1 border-2 border-black dark:border-white text-black dark:text-white bg-white dark:bg-transparent">
+            <div className="text-xl md:text-2xl font-semibold tracking-tighter uppercase italic px-4 py-1 border-2 border-black dark:border-white text-black dark:text-white bg-white dark:bg-transparent">
               LIFELORE
             </div>
             <div className="hidden md:block">
@@ -90,6 +91,23 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+
+          {user && user?.plan === "free" && (
+            <Link
+              href={"/pricing"}
+              className={`flex items-center gap-1 py-1 text-[11px] font-bold uppercase tracking-widest transition-all cursor-pointer `}
+            >
+              <Award className="w-3.5 h-3.5" />
+              Upgrade
+            </Link>
+          )}
+
+          {user && user?.plan === "premium" && (
+            <div className="flex items-center gap-1 px-3 py-1 bg-black text-white dark:bg-white dark:text-black text-[9px] font-black uppercase tracking-wider border border-black dark:border-white">
+              <Award className="w-3 h-3" />
+              Premium Edition
+            </div>
+          )}
         </div>
 
         {/* Right Side */}
@@ -120,14 +138,15 @@ export default function Navbar() {
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="flex items-center gap-2 focus:outline-none cursor-pointer"
               >
-                <div className="w-9 h-9 rounded-full border border-black dark:border-white p-0.5 overflow-hidden">
-                  <img
+                <div className="w-9 h-9 rounded-full border border-black dark:border-white p-0.5 overflow-hidden relative">
+                  <Image
                     src={
                       user.photoURL ||
                       "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
                     }
                     alt={user.name}
                     className="w-full h-full rounded-full object-cover"
+                    fill
                   />
                 </div>
                 <div className="text-left hidden lg:block">

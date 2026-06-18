@@ -4,10 +4,9 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { ArrowRight, Lock, UserIcon, Sparkles, Mail } from "lucide-react";
 import { ShieldCheck } from "lucide-react";
-import { Image } from "lucide-react";
-import { ImageIcon } from "lucide-react";
 import { Camera } from "lucide-react";
-import { signIn, signUp } from "@/lib/auth-client";
+import { authClient, signIn, signUp } from "@/lib/auth-client";
+import showToast from "@/lib/showToast";
 
 const LoginPage = () => {
   const demoAccounts = [
@@ -30,6 +29,27 @@ const LoginPage = () => {
       role: "FREE BLOGGER",
     },
   ];
+
+  const handleDemoLogin = async (acc) => {
+    setLoading(true);
+    try {
+      const { data, error } = await signIn.email({
+        email: acc.email,
+        password: acc.pass,
+      });
+
+      // if (data.user.role === "admin") {
+      //   navigateTo("admin-dashboard");
+      // } else {
+      //   navigateTo("dashboard");
+      // }
+    } catch (e) {
+      showToast(e.message, "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const [mode, setMode] = useState("login");
   const [loading, setLoading] = useState(false);
 
@@ -49,30 +69,39 @@ const LoginPage = () => {
 
   const password = watch("password", "");
 
-  const onSubmit = async (data) => {
-    try {
-      setLoading(true);
+  const onSubmit = async (formData) => {
+    setLoading(true);
 
-      console.log("Form Data:", data);
+    const { name, email, password, photoURL } = formData;
 
-      if (mode === "login") {
-        // login logic
-        // await signIn(data.email, data.password)
-        await signIn.email({ email: data.email, password: data.password });
+    if (mode === "login") {
+      // login logic
+      // await signIn(data.email, data.password)
+      const { data, error } = await signIn.email({
+        email: email,
+        password: password,
+      });
+      if (error) {
+        showToast(error.message);
       } else {
-        await signUp.email({
-          name: data.name,
-          email: data.email,
-          password: data.password,
-          image: data.photoURL,
-          // callbackURL: "/dashboard",
-        });
+        showToast("Login successful!");
       }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
+    } else {
+      const { data, error } = await signUp.email({
+        name: name,
+        email: email,
+        password: password,
+        image: photoURL,
+        // callbackURL: "/dashboard",
+      });
+      if (error) {
+        showToast(error.message);
+      } else {
+        showToast("Registration successful!");
+      }
     }
+
+    setLoading(false);
   };
 
   const handleGoogleLogin = () => {
@@ -341,7 +370,7 @@ const LoginPage = () => {
           {demoAccounts.map((acc) => (
             <div
               key={acc.email}
-              onClick={() => {}}
+              onClick={() => handleDemoLogin(acc)}
               className="p-2.5 rounded-none bg-white dark:bg-[#121212] hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black border border-black flex items-center justify-between cursor-pointer group transition-all text-[11px]"
             >
               <div className="text-left font-mono">

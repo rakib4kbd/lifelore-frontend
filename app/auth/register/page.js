@@ -28,6 +28,27 @@ const LoginPage = () => {
       role: "FREE BLOGGER",
     },
   ];
+
+  const handleDemoLogin = async (acc) => {
+    setLoading(true);
+    try {
+      const { data, error } = await signIn.email({
+        email: acc.email,
+        password: acc.pass,
+      });
+
+      // if (data.user.role === "admin") {
+      //   navigateTo("admin-dashboard");
+      // } else {
+      //   navigateTo("dashboard");
+      // }
+    } catch (e) {
+      showToast(e.message, "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const [mode, setMode] = useState("register");
   const [loading, setLoading] = useState(false);
 
@@ -47,37 +68,36 @@ const LoginPage = () => {
 
   const password = watch("password", "");
 
-  const onSubmit = async (data) => {
-    try {
-      setLoading(true);
+  const onSubmit = async (formData) => {
+    setLoading(true);
 
-      // console.log("Form Data:", data);
+    console.log("Form Data:", formData);
+    const { name, email, password, photoURL } = formData;
 
-      if (mode === "login") {
-        // login logic
-        // await signIn(data.email, data.password)
-        await signIn.email({ email: data.email, password: data.password });
-      } else {
-        await signUp.email(
-          {
-            name: data.name,
-            email: data.email,
-            password: data.password,
-            image: data.photoURL,
-            // callbackURL: "/dashboard",
-          },
-          {
-            onError: (ctx) => {
-              console.log(ctx.error.message);
-            },
-          },
-        );
+    if (mode === "login") {
+      // login logic
+      // await signIn(data.email, data.password)
+      const { data, error } = await signIn.email({
+        email: email,
+        password: password,
+      });
+      if (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
+    } else {
+      const { data, error } = await signUp.email({
+        name: name,
+        email: email,
+        password: password,
+        image: photoURL,
+        // callbackURL: "/dashboard",
+      });
+      if (error) {
+        console.error(error);
+      }
     }
+
+    setLoading(false);
   };
 
   const handleGoogleLogin = () => {
@@ -346,7 +366,9 @@ const LoginPage = () => {
           {demoAccounts.map((acc) => (
             <div
               key={acc.email}
-              onClick={() => {}}
+              onClick={() => {
+                handleDemoLogin(acc);
+              }}
               className="p-2.5 rounded-none bg-white dark:bg-[#121212] hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black border border-black flex items-center justify-between cursor-pointer group transition-all text-[11px]"
             >
               <div className="text-left font-mono">

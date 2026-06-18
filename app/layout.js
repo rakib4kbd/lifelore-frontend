@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
 import FooterSection from "@/components/Footer/Footer";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +33,25 @@ export default function RootLayout({ children }) {
 
           {children}
           <FooterSection />
+          <Toaster
+            position="top-right"
+            containerStyle={{
+              top: 100,
+              left: 20,
+              bottom: 20,
+              right: 20,
+            }}
+            toastOptions={{
+              className: "",
+              style: {
+                border: "2px solid #ffffff",
+                borderRadius: "0px",
+                padding: "16px",
+                color: "#faf9f6",
+                backgroundColor: "#0d0d0d",
+              },
+            }}
+          />
         </div>
       </body>
     </html>
