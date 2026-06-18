@@ -22,6 +22,10 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   const { user } = await auth.api.getSession({ headers: await headers() });
+  if (!user) {
+    redirect("/auth/login");
+  }
+
   return (
     <html
       lang="en"

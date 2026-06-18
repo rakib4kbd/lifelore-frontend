@@ -1,13 +1,14 @@
+import { auth } from "@/lib/auth";
 import { fetchLessons } from "@/lib/fetchLessons";
-import userSession from "@/lib/userSession";
 import { Lock } from "lucide-react";
 import { Calendar } from "lucide-react";
+import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
 const PublicLessonsPage = async () => {
-  const user = await userSession();
+  const user = await auth.api.getSession({ headers: await headers() });
   const lessons = await fetchLessons();
   const total = lessons.length;
   return (

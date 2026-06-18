@@ -1,5 +1,5 @@
+import { auth } from "@/lib/auth";
 import { fetchLessonById } from "@/lib/fetchLessons";
-import userSession from "@/lib/userSession";
 import { Clock } from "lucide-react";
 import { Brain } from "lucide-react";
 import { Heart } from "lucide-react";
@@ -12,10 +12,10 @@ import { Share2 } from "lucide-react";
 import { ThumbsUp } from "lucide-react";
 import { Lock } from "lucide-react";
 import { ChevronLeft } from "lucide-react";
-import React from "react";
+import { headers } from "next/headers";
 
 const LessonDetailPage = async ({ params }) => {
-  const user = await userSession();
+  const { user } = await auth.api.getSession({ headers: await headers() });
   const { id } = await params;
   const lesson = await fetchLessonById(id);
 

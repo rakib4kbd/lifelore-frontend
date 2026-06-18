@@ -1,4 +1,8 @@
+import { auth } from "@/lib/auth";
 import { stripe } from "@/lib/stripe";
+import { AArrowDown } from "lucide-react";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 const CheckoutSuccess = async ({ searchParams }) => {
@@ -9,6 +13,7 @@ const CheckoutSuccess = async ({ searchParams }) => {
   const {
     status,
     customer_details: { email: customerEmail },
+    metadata: { userId },
   } = await stripe.checkout.sessions.retrieve(session_id, {
     expand: ["line_items", "payment_intent"],
   });
@@ -18,13 +23,25 @@ const CheckoutSuccess = async ({ searchParams }) => {
   }
 
   if (status === "complete") {
+    try {
+      await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/api/users/${userId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ isPremium: true }),
+        },
+      );
+      await auth.api.revokeSession({ headers: await headers() });
+    } catch (error) {
+      console.error("Error occurred while upgrading user:", error);
+    }
+
     return (
-      <section id="success">
-        <p>
-          We appreciate your business! A confirmation email will be sent to{" "}
-          {customerEmail}. If you have any questions, please email{" "}
-          <a href="mailto:orders@example.com">orders@example.com</a>.
-        </p>
+      <section id="success" className="max-w-7xl mx-auto my-10">
+        <p>Upgrade successful! Your account has been upgraded to Premium.</p>
       </section>
     );
   }

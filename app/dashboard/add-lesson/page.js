@@ -1,9 +1,10 @@
 import AddLessons from "@/components/Dashboard/AddLessons/AddLessons";
-import userSession from "@/lib/userSession";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import React from "react";
 
 const AddLessonPage = async () => {
-  const user = await userSession();
+  const { user } = await auth.api.getSession({ headers: await headers() });
   return <AddLessons user={user} />;
 };
 

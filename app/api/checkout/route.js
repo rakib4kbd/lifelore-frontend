@@ -2,10 +2,12 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 
 import { stripe } from "../../../lib/stripe";
+import { auth } from "@/lib/auth";
 
 export async function POST() {
   try {
     const headersList = await headers();
+    const { user } = await auth.api.getSession({ headers: await headers() });
     const origin = headersList.get("origin");
 
     // Create Checkout Sessions from body params.
@@ -18,6 +20,9 @@ export async function POST() {
         },
       ],
       mode: "payment",
+      metadata: {
+        userId: user.id,
+      },
       success_url: `${origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
     });
     return NextResponse.redirect(session.url, 303);

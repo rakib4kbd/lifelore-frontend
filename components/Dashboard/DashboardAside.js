@@ -11,7 +11,6 @@ import { ShieldAlert } from "lucide-react";
 import { ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
 
 const DashboardAside = ({ user }) => {
   const adminDashboardNavigation = [

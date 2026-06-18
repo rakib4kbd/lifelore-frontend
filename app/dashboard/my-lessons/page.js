@@ -1,5 +1,5 @@
+import { auth } from "@/lib/auth";
 import { fetchLessonsByCreatorId } from "@/lib/fetchLessons";
-import userSession from "@/lib/userSession";
 import { Layers } from "lucide-react";
 import { ThumbsUp } from "lucide-react";
 import { Star } from "lucide-react";
@@ -7,10 +7,16 @@ import { Globe } from "lucide-react";
 import { Edit } from "lucide-react";
 import { Trash2 } from "lucide-react";
 import { Lock } from "lucide-react";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import React from "react";
 
 const MyLessons = async () => {
-  const user = await userSession();
+  const { user } = await auth.api.getSession({ headers: await headers() });
+  if (!user) {
+    redirect("/auth/login");
+  }
+
   console.log("my_lessons_user", user);
   const lessons = await fetchLessonsByCreatorId(user?.id);
   console.log("my_lessons", lessons);
