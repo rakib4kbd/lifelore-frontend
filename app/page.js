@@ -1,6 +1,9 @@
-import Logo from "@/components/Logo";
-import Navbar from "@/components/Navbar/Navbar";
+import Slider from "@/components/Home/SliderSection/Slider";
 
 export default function Home() {
-  return <div></div>;
+  return (
+    <div className="flex flex-col mx-auto max-w-7xl my-10">
+      <Slider />
+    </div>
+  );
 }

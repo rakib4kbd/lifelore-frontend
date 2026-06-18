@@ -4,9 +4,20 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Moon, ChevronDown } from "lucide-react";
+import { useSession } from "@/lib/auth-client";
+import { LogOut } from "lucide-react";
+import { LayoutDashboard } from "lucide-react";
+import { UserIcon } from "lucide-react";
+import { useState } from "react";
 
-export default function Navbar({ user }) {
+export default function Navbar() {
+  const { data, isPending } = useSession();
+  const user = data?.user;
   const pathname = usePathname();
+
+  const handleLogout = () => {};
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const navLinks = [
     {
@@ -52,18 +63,20 @@ export default function Navbar({ user }) {
       <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-4">
-          <div className="text-xl md:text-2xl font-black tracking-tighter uppercase italic px-4 py-1 border-2 border-black dark:border-white text-black dark:text-white bg-white dark:bg-transparent">
-            LIFELORE
-          </div>
-          <div className="hidden md:block">
-            <span className="font-mono text-[9px] text-neutral-400 dark:text-neutral-500 block tracking-widest uppercase">
-              WISDOM JOURNAL
-            </span>
+          <div className="flex items-center gap-4 cursor-pointer">
+            <div className="text-xl md:text-2xl font-black font-semibold tracking-tighter uppercase italic px-4 py-1 border-2 border-black dark:border-white text-black dark:text-white bg-white dark:bg-transparent">
+              LIFELORE
+            </div>
+            <div className="hidden md:block">
+              <span className="font-mono text-[9px] text-neutral-400 dark:text-neutral-500 block tracking-widest uppercase">
+                WISDOM JOURNAL
+              </span>
+            </div>
           </div>
         </Link>
 
         {/* Center Navigation */}
-        <div className="hidden items-center gap-10 lg:flex">
+        <div className="hidden items-center gap-4 lg:flex">
           {filteredLinks.map((link) => (
             <Link
               key={link.label}
@@ -89,7 +102,7 @@ export default function Navbar({ user }) {
             <>
               <Link
                 href="/auth/login"
-                className="px-3 py-2 text-[11px] font-bold uppercase tracking-widest text-[#1a1a1a]/85 dark:text-[#faf9f6]/85 hover:text-black dark:hover:text-white cursor-pointer"
+                className="px-3 py-2 text-[11px] font-bold uppercase tracking-widest text-editorial-text/85 dark:text-editorial-dark-text/85 hover:text-black dark:hover:text-white cursor-pointer"
               >
                 Login
               </Link>
@@ -102,50 +115,86 @@ export default function Navbar({ user }) {
               </Link>
             </>
           ) : (
-            <div className="relative group">
-              <button className="flex items-center gap-2">
-                {user.image ? (
-                  <Image
-                    src={user.image}
+            <div className="relative">
+              <button
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className="flex items-center gap-2 focus:outline-none cursor-pointer"
+              >
+                <div className="w-9 h-9 rounded-full border border-black dark:border-white p-0.5 overflow-hidden">
+                  <img
+                    src={
+                      user.photoURL ||
+                      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
+                    }
                     alt={user.name}
-                    width={40}
-                    height={40}
-                    className="rounded-full"
+                    className="w-full h-full rounded-full object-cover"
                   />
-                ) : (
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-700 text-white">
-                    {user.name.charAt(0)}
+                </div>
+                <div className="text-left hidden lg:block">
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-black dark:text-white truncate max-w-[120px]">
+                    {user.name}
                   </div>
-                )}
-
-                <ChevronDown size={16} className="text-white" />
+                  <div className="text-[9px] text-neutral-400 dark:text-neutral-500 font-mono uppercase">
+                    {user.role}
+                  </div>
+                </div>
               </button>
 
-              <div className="invisible absolute right-0 top-12 w-60 rounded-md border border-zinc-800 bg-zinc-950 opacity-0 shadow-xl transition-all group-hover:visible group-hover:opacity-100">
-                <div className="border-b border-zinc-800 p-4">
-                  <p className="font-semibold text-white">{user.name}</p>
-                </div>
+              {dropdownOpen && (
+                <>
+                  <div
+                    className="fixed inset-0 z-10"
+                    onClick={() => setDropdownOpen(false)}
+                  />
+                  <div className="absolute right-0 mt-2 w-56 rounded-none bg-[#F9F7F2] dark:bg-[#181816] border-2 border-black dark:border-white shadow-none overflow-hidden z-20">
+                    <div className="p-4 border-b border-black dark:border-white/50 bg-[#F5F2EA] dark:bg-[#20201d]">
+                      <p className="text-[9px] uppercase tracking-widest text-[#1a1a1a]/60 dark:text-[#faf9f6]/60">
+                        Logged in as
+                      </p>
+                      <p className="text-sm font-serif italic text-black dark:text-white truncate">
+                        {user.name}
+                      </p>
+                      <p className="text-[10px] font-mono text-neutral-500 dark:text-neutral-400 truncate">
+                        {user.email}
+                      </p>
+                    </div>
 
-                <div className="py-2">
-                  <Link
-                    href="/profile"
-                    className="block px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-900"
-                  >
-                    Profile
-                  </Link>
+                    <div className="p-2 space-y-1">
+                      <Link
+                        href="/profile"
+                        onClick={() => {
+                          setDropdownOpen(false);
+                        }}
+                        className="w-full text-left flex items-center gap-2 px-3 py-2 text-[11px] uppercase tracking-wider font-bold text-neutral-700 dark:text-neutral-300 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all cursor-pointer"
+                      >
+                        <UserIcon className="w-3.5 h-3.5" />
+                        My Profile
+                      </Link>
 
-                  <Link
-                    href="/dashboard"
-                    className="block px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-900"
-                  >
-                    Dashboard
-                  </Link>
+                      <Link
+                        href="/dashboard"
+                        onClick={() => {
+                          setDropdownOpen(false);
+                        }}
+                        className="w-full text-left flex items-center gap-2 px-3 py-2 text-[11px] uppercase tracking-wider font-bold text-neutral-700 dark:text-neutral-300 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all cursor-pointer"
+                      >
+                        <LayoutDashboard className="w-3.5 h-3.5" />
+                        Dashboard Overview
+                      </Link>
 
-                  <button className="block w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-zinc-900">
-                    Logout
-                  </button>
-                </div>
-              </div>
+                      <hr className="border-black dark:border-white/50 my-1" />
+
+                      <button
+                        onClick={handleLogout}
+                        className="w-full text-left flex items-center gap-2 px-3 py-2 text-[11px] uppercase tracking-wider font-bold text-red-600 dark:text-red-400 hover:bg-red-600 hover:text-white dark:hover:bg-red-500 dark:hover:text-white transition-all cursor-pointer"
+                      >
+                        <LogOut className="w-3.5 h-3.5" />
+                        Log Out
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           )}
         </div>

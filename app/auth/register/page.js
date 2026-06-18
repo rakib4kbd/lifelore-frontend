@@ -80,6 +80,13 @@ const LoginPage = () => {
     }
   };
 
+  const handleGoogleLogin = () => {
+    signIn.social({
+      provider: "google",
+      // callbackURL: callbackUrl,
+    });
+  };
+
   return (
     <div className="max-w-md mx-auto my-12 p-6 sm:p-8 bg-white dark:bg-[#121212] border-2 border-black dark:border-white rounded-none shadow-none space-y-6 text-left">
       {/* Header */}
@@ -296,9 +303,11 @@ const LoginPage = () => {
 
       {/* FEDERATED SIGN-IN BUTTON */}
       <button
-        onClick={() => {}}
+        onClick={() => {
+          handleGoogleLogin();
+        }}
         disabled={loading}
-        className="w-full py-3 border-2 border-black dark:border-white bg-[#FAF9F6] hover:bg-black text-black hover:text-white dark:bg-[#1e293b] dark:hover:bg-white dark:hover:text-black text-xs font-black uppercase tracking-widest rounded-none flex items-center justify-center gap-2 cursor-pointer transition-colors"
+        className="w-full py-3 border-2 border-black dark:border-white bg-black hover:bg-white text-white hover:text-black dark:bg-white dark:hover:bg-transparent dark:text-black dark:hover:text-white text-xs font-black uppercase tracking-widest rounded-none transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
       >
         <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none">
           <path
