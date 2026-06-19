@@ -1,6 +1,8 @@
 import { auth } from "@/lib/auth";
-import { fetchPublicLessons } from "@/lib/fetchLessons";
+import { fetchPublicLessons } from "@/lib/fetchData";
 import { Lock } from "lucide-react";
+import { Heart } from "lucide-react";
+import { Bookmark } from "lucide-react";
 import { Calendar } from "lucide-react";
 import { headers } from "next/headers";
 import Image from "next/image";
@@ -32,7 +34,7 @@ const PublicLessonsPage = async () => {
       </div>
 
       {/* PUBLIC LESSONS CARD CONTAINER */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 auto-rows-fr auto-cols-fr gap-6">
         {lessons.map((lesson, idx) => {
           // Check if blurred/locked
           const isPremium = lesson.accessLevel === "premium";
@@ -41,9 +43,10 @@ const PublicLessonsPage = async () => {
           const isBlurred = isPremium && !isViewerPremium && !isCreator;
 
           return (
-            <div
+            <Link
+              href={isBlurred ? "/pricing" : `lessons/${lesson._id}`}
               key={idx}
-              className="group relative flex flex-col justify-between bg-white dark:bg-[#121212] border-2 border-black dark:border-white rounded-none overflow-hidden h-[380px] p-6 text-left hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] transition-all"
+              className="group relative flex flex-col justify-between bg-white dark:bg-[#121212] border-2 border-black dark:border-white rounded-none overflow-hidden p-6 text-left hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] transition-all cursor-pointer"
             >
               {/* BLURRED MOCKUP WITH LOCK ELEMENT */}
               {isBlurred && (
@@ -74,7 +77,7 @@ const PublicLessonsPage = async () => {
                   </span>
                   <span
                     className={`px-2 py-0.5 rounded-none text-[9px] font-black uppercase tracking-widest border border-black dark:border-white/50 ${
-                      lesson.accessLevel === "Premium"
+                      lesson.accessLevel === "premium"
                         ? "bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-400"
                         : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400"
                     }`}
@@ -83,7 +86,7 @@ const PublicLessonsPage = async () => {
                   </span>
                 </div>
 
-                <h3 className="font-serif font-bold text-xl text-black dark:text-white leading-tight line-clamp-2 hover:underline cursor-pointer">
+                <h3 className="font-serif font-bold text-2xl text-black dark:text-white leading-tight line-clamp-2 hover:underline cursor-pointer">
                   {lesson.title}
                 </h3>
 
@@ -94,47 +97,52 @@ const PublicLessonsPage = async () => {
                   </span>
                 </div>
 
-                <p className="text-neutral-655 dark:text-neutral-400 text-xs font-serif leading-relaxed line-clamp-4 italic">
+                <p className="text-neutral-655 dark:text-neutral-400 text-sm font-serif leading-relaxed line-clamp-4 italic">
                   &quot;{lesson.description}&quot;
                 </p>
               </div>
-
               {/* Footer Creator Details */}
-              <div className="border-t border-black/10 dark:border-white/10 pt-4 mt-auto flex items-center justify-between z-0">
-                <div className="flex items-center gap-2">
-                  <figure className="relative w-7 h-7">
-                    <Image
-                      src={
-                        lesson.creatorPhoto ||
-                        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
-                      }
-                      alt={lesson.creatorName}
-                      fill
-                      className="w-7 h-7 rounded-full border border-black dark:border-white object-cover"
-                    />
-                  </figure>
-                  <div className="text-left">
-                    <p className="text-[10px] font-black uppercase tracking-wider text-neutral-700 dark:text-neutral-300 truncate max-w-25">
-                      {lesson.creatorName}
-                    </p>
-                    <p className="text-[9px] font-mono text-neutral-400 dark:text-neutral-500 flex items-center gap-0.5 uppercase font-bold">
-                      <Calendar className="w-2.5 h-2.5" />
-                      {new Date(lesson.createdAt).toLocaleDateString(
-                        undefined,
-                        { month: "short", day: "numeric" },
-                      )}
-                    </p>
-                  </div>
+              <div>
+                <div className="flex justify-end gap-2 pb-2 text-neutral-500">
+                  <span className="flex items-center gap-1 text-[10px]">
+                    <Heart className="w-3 h-3 text-red-500 fill-red-500/10" />
+                    {lesson.likesCount}
+                  </span>
+                  <span className="flex items-center gap-1 text-[10px]">
+                    <Bookmark className="w-3 h-3 text-emerald-500 fill-emerald-500/10" />
+                    {lesson.favouritesCount || 0}
+                  </span>
                 </div>
+                <div className="border-t border-black/10 dark:border-white/10 pt-4 flex items-center justify-between z-0">
+                  <div className="flex items-center gap-2">
+                    <figure className="relative w-7 h-7">
+                      <Image
+                        src={
+                          lesson.creatorPhoto ||
+                          "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
+                        }
+                        alt={lesson.creatorName}
+                        fill
+                        className="w-7 h-7 rounded-full border border-black dark:border-white object-cover"
+                      />
+                    </figure>
+                    <div className="text-left">
+                      <p className="text-[10px] font-black uppercase tracking-wider text-neutral-700 dark:text-neutral-300 truncate max-w-25">
+                        {lesson.creatorName}
+                      </p>
+                      <p className="text-[9px] font-mono text-neutral-400 dark:text-neutral-500 flex items-center gap-0.5 uppercase font-bold">
+                        <Calendar className="w-2.5 h-2.5" />
+                        {new Date(lesson.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
 
-                <Link
-                  href={`lessons/${lesson._id}`}
-                  className="btn px-4 py-2 border-2 border-black dark:border-white bg-black hover:bg-white text-white hover:text-black dark:bg-white dark:hover:bg-transparent dark:text-black dark:hover:text-white text-[10px] uppercase font-black tracking-widest rounded-none transition-all cursor-pointer"
-                >
-                  SEE DETAILS
-                </Link>
+                  <button className="btn px-4 py-2 border-2 border-black dark:border-white bg-black hover:bg-white text-white hover:text-black dark:bg-white dark:hover:bg-transparent dark:text-black dark:hover:text-white text-[10px] uppercase font-black tracking-widest rounded-none transition-all cursor-pointer">
+                    SEE DETAILS
+                  </button>
+                </div>
               </div>
-            </div>
+            </Link>
           );
         })}
       </div>

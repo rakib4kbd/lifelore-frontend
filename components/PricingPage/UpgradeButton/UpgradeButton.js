@@ -1,5 +1,5 @@
 "use client";
-import showToast from "@/lib/showToast";
+import showToast from "@/lib/showAlertToast";
 import { CreditCard } from "lucide-react";
 import { Award } from "lucide-react";
 import React, { useState } from "react";

@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth";
-import { fetchLessonsByCreatorId } from "@/lib/fetchLessons";
+import { fetchLessonsByCreatorId } from "@/lib/fetchData";
 import { Layers } from "lucide-react";
 import { ThumbsUp } from "lucide-react";
 import { Star } from "lucide-react";

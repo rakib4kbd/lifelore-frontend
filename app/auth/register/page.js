@@ -6,8 +6,21 @@ import { ArrowRight, Lock, UserIcon, Sparkles, Mail } from "lucide-react";
 import { ShieldCheck } from "lucide-react";
 import { Camera } from "lucide-react";
 import { authClient, signIn, signUp } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
+  const router = useRouter();
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+
+  if (user && user.role === "admin") {
+    router.push("/admin/overview");
+  }
+
+  if (user && user.role !== "admin") {
+    router.push("/dashboard/overview");
+  }
+
   const demoAccounts = [
     {
       name: "Global Admin",
@@ -43,7 +56,7 @@ const LoginPage = () => {
       //   navigateTo("dashboard");
       // }
     } catch (e) {
-      showToast(e.message, "error");
+      showAlertToast(e.message, "error");
     } finally {
       setLoading(false);
     }

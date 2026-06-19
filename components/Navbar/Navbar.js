@@ -9,7 +9,7 @@ import { LogOut } from "lucide-react";
 import { LayoutDashboard } from "lucide-react";
 import { UserIcon } from "lucide-react";
 import { useState } from "react";
-import showToast from "@/lib/showToast";
+import showToast from "@/lib/showAlertToast";
 import { Award } from "lucide-react";
 import { Shield } from "lucide-react";
 
@@ -23,7 +23,7 @@ export default function Navbar() {
     const { data, error } = await signOut();
     router.push("/auth/login");
     if (error) {
-      showToast("Error occurred while logging out:", error);
+      showAlertToast("Error occurred while logging out:", error);
     }
   };
 
@@ -146,7 +146,7 @@ export default function Navbar() {
                 <div className="w-9 h-9 rounded-full border border-black dark:border-white p-0.5 overflow-hidden relative">
                   <Image
                     src={
-                      user.photoURL ||
+                      user.image ||
                       "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
                     }
                     alt={user.name}

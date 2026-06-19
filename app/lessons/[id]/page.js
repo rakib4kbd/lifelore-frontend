@@ -1,9 +1,6 @@
 import DetailedLessonInteractionButtons from "@/components/Lessons/DetailedLesson/DetailedLessonInteractionButtons";
 import { auth } from "@/lib/auth";
-import {
-  fetchLessonById,
-  fetchLessonCountByCreatorId,
-} from "@/lib/fetchLessons";
+import { fetchLessonById, fetchLessonCountByCreatorId } from "@/lib/fetchData";
 import { Clock } from "lucide-react";
 import { ChevronRight } from "lucide-react";
 import { Eye } from "lucide-react";
@@ -87,7 +84,7 @@ const LessonDetailPage = async ({ params }) => {
                 {lesson.creatorName}
               </p>
               <p className=" dark:bg-editorial-dark-bg rounded-none flex items-center gap-0 text-[10px] uppercase font-black tracking-widest text-[#121212] dark:text-white/50">
-                View All Lessons by this author
+                View All ({count}) Lessons by this author
                 <ChevronRight className="w-4 h-4" />
               </p>
             </div>
@@ -102,7 +99,15 @@ const LessonDetailPage = async ({ params }) => {
               })}
             </span>
             <span className="text-[10px] font-mono uppercase font-black text-neutral-500">
-              {count} Total Lessons
+              Updated:{" "}
+              {new Date(lesson.updatedAt).toLocaleDateString(undefined, {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
+            </span>
+            <span className="text-[10px] font-mono uppercase font-black text-neutral-500">
+              visibility: {lesson.visibility}
             </span>
           </div>
         </div>

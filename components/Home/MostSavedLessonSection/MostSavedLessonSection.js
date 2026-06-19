@@ -1,6 +1,10 @@
-import { fetchMostFavouriteLessons } from "@/lib/fetchLessons";
+import {
+  fetchMostFavouriteLessons,
+  fetchUsersWithLessonCount,
+} from "@/lib/fetchData";
 import { Users } from "lucide-react";
 import { Users2 } from "lucide-react";
+import { Zap } from "lucide-react";
 import { Bookmark } from "lucide-react";
 import { TrendingUp } from "lucide-react";
 import Image from "next/image";
@@ -9,12 +13,13 @@ import React from "react";
 const MostSavedLessonSection = async () => {
   const loading = false;
   const topSaves = await fetchMostFavouriteLessons();
+  const contributors = await fetchUsersWithLessonCount();
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start my-20">
       {/* SECTION 4A: MOST SAVED LESSONS PORTFOLIO (7 Columns) */}
       <div className="lg:col-span-8 space-y-6">
         <div className="text-left space-y-1 border-b-2 border-black dark:border-white pb-3">
-          <h2 className="text-2xl font-black text-black dark:text-white font-serif flex items-center gap-1.5">
+          <h2 className="text-3xl sm:text-4xl font-black text-black dark:text-white font-serif flex items-center gap-1.5">
             Most Saved Lessons Registry
             <TrendingUp className="w-5 h-5 text-black dark:text-white" />
           </h2>
@@ -24,11 +29,7 @@ const MostSavedLessonSection = async () => {
           </p>
         </div>
 
-        {loading ? (
-          <div className="py-10 flex justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black dark:border-white" />
-          </div>
-        ) : topSaves.length === 0 ? (
+        {topSaves.length === 0 ? (
           <div className="p-8 rounded-none border-2 border-dashed border-black/20 dark:border-white/20 text-center text-neutral-400">
             No highly saved logs yet.
           </div>
@@ -36,9 +37,9 @@ const MostSavedLessonSection = async () => {
           <div className="space-y-4">
             {topSaves.map((lesson) => (
               <div
-                key={lesson.id}
+                key={lesson._id}
                 // onClick={() => navigateTo("lesson-details", { id: lesson.id })}
-                className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 bg-white dark:bg-[#121212] border-2 border-black dark:border-white/70 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:border-black cursor-pointer transition-all gap-4 text-left rounded-none"
+                className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 bg-white dark:bg-[#121212] border-2 border-black dark:border-white/70 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] cursor-pointer transition-all gap-4 text-left rounded-none"
               >
                 <div className="space-y-2 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
@@ -79,16 +80,16 @@ const MostSavedLessonSection = async () => {
       {/* SECTION 4B: TOP CONTRIBUTORS OF THE WEEK (4 Columns) */}
       <div className="lg:col-span-4 space-y-6">
         <div className="text-left space-y-1 border-b-2 border-black dark:border-white pb-3">
-          <h2 className="text-2xl font-black text-black dark:text-white font-serif flex items-center gap-1.5">
+          <h2 className="text-3xl sm:text-4xl font-black text-black dark:text-white font-serif flex items-center gap-1.5">
             <Users2 className="w-5 h-5 text-black dark:text-white" />
-            Sages rank list
+            Sages Rank List
           </h2>
           <p className="text-neutral-500 dark:text-neutral-400 text-xs font-sans">
             Writers with the highest frequency of strategic journals.
           </p>
         </div>
 
-        {/* <div className="p-6 bg-[#F9F7F2] dark:bg-[#181816] border-2 border-black dark:border-white rounded-none shadow-none space-y-4">
+        <div className="p-6 bg-[#F9F7F2] dark:bg-[#181816] border-2 border-black dark:border-white rounded-none shadow-none space-y-4">
           {contributors.map((contrib, idx) => (
             <div
               key={contrib.email}
@@ -96,14 +97,17 @@ const MostSavedLessonSection = async () => {
             >
               <div className="flex items-center gap-3">
                 <div className="relative shrink-0">
-                  <img
-                    src={
-                      contrib.photo ||
-                      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
-                    }
-                    alt={contrib.name}
-                    className="w-10 h-10 rounded-full border border-black dark:border-white object-cover"
-                  />
+                  <figure className="w-10 h-10">
+                    <Image
+                      src={
+                        contrib.image ||
+                        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
+                      }
+                      alt={contrib.name}
+                      fill
+                      className="w-10 h-10 rounded-full border border-black dark:border-white object-cover"
+                    />
+                  </figure>
                   <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-none bg-black text-white text-[9px] font-black flex items-center justify-center border border-black">
                     {idx + 1}
                   </div>
@@ -121,17 +125,18 @@ const MostSavedLessonSection = async () => {
               <div className="text-right">
                 <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-black text-white dark:bg-white dark:text-black border border-black font-mono text-[9px] font-black uppercase tracking-widest">
                   <Zap className="w-3 h-3" />
-                  {contrib.count} Logs
+                  {contrib.totalLessons}{" "}
+                  {contrib.totalLessons === 1 ? "Lesson" : "Lessons"}
                 </span>
               </div>
             </div>
           ))}
 
           <div className="bg-white dark:bg-[#121212] p-4 text-center text-[11px] text-neutral-600 dark:text-neutral-400 font-serif italic border border-black/60 leading-relaxed rounded-none">
-            "Publish wisdom journals inside your Self Writing Suite to claim a
-            prominent listing on the Sage Roll."
+            &quot;Publish wisdom journals inside your Self Writing Suite to
+            claim a prominent listing on the Sage Roll.&quot;
           </div>
-        </div> */}
+        </div>
       </div>
     </div>
   );
