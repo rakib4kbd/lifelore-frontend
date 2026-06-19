@@ -7,7 +7,7 @@ import { auth } from "@/lib/auth";
 export async function POST() {
   try {
     const headersList = await headers();
-    const user = await auth.api.getSession({ headers: await headers() });
+    const { user } = await auth.api.getSession({ headers: await headers() });
     const origin = headersList.get("origin");
 
     // Create Checkout Sessions from body params.
@@ -24,6 +24,7 @@ export async function POST() {
         userId: user.id,
       },
       success_url: `${origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/payment/cancel`,
     });
     return NextResponse.redirect(session.url, 303);
   } catch (err) {

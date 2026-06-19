@@ -1,7 +1,5 @@
 import { auth } from "@/lib/auth";
 import { stripe } from "@/lib/stripe";
-import { AArrowDown } from "lucide-react";
-import { revalidatePath, revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -18,33 +16,47 @@ const CheckoutSuccess = async ({ searchParams }) => {
     expand: ["line_items", "payment_intent"],
   });
 
+  console.log(status, customerEmail, userId);
   if (status === "open") {
     return redirect("/");
   }
 
   if (status === "complete") {
-    try {
-      await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}/api/users/${userId}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ isPremium: true }),
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_API}/api/users/${userId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
-      await auth.api.revokeSession({ headers: await headers() });
-    } catch (error) {
-      console.error("Error occurred while upgrading user:", error);
-    }
-
-    return (
-      <section id="success" className="max-w-7xl mx-auto my-10">
-        <p>Upgrade successful! Your account has been upgraded to Premium.</p>
-      </section>
+        body: JSON.stringify({ isPremium: true }),
+      },
     );
+
+    console.log(await res.status);
+
+    if (res.status !== 200) {
+      return (
+        <section id="error" className="max-w-7xl mx-auto my-10">
+          <p>
+            An error occurred while upgrading your account. Please try again.
+            <br />
+            {error.message}
+          </p>
+        </section>
+      );
+    }
   }
+
+  await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  return (
+    <section id="success" className="max-w-7xl mx-auto my-10">
+      <p>Upgrade successful! Your account has been upgraded to Premium.</p>
+    </section>
+  );
 };
 
 export default CheckoutSuccess;

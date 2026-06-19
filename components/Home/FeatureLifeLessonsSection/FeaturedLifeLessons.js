@@ -34,7 +34,7 @@ const FeaturedLifeLessons = async () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {featured.map((lesson) => (
             <div
-              key={lesson.id}
+              key={lesson._id}
               className="group relative cursor-pointer p-6 rounded-none bg-white dark:bg-[#121212] border-2 border-black dark:border-white/70 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] transition-all flex flex-col justify-between"
             >
               <div className="space-y-3 text-left">

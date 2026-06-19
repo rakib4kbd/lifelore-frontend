@@ -98,7 +98,7 @@ const DashboardAside = ({ user }) => {
         })}
 
         {/* Quick Help box */}
-        {!user?.isPremium && (
+        {user && !user.isPremium && user.role !== "admin" && (
           <div className="p-4 rounded-none bg-[#F9F7F2] dark:bg-editorial-dark-card/30 border-2 border-black text-xs hidden md:block space-y-2">
             <h4 className="font-serif font-black text-[#121212] dark:text-white flex items-center gap-1 uppercase tracking-tight text-sm">
               <Award className="w-4 h-4" />

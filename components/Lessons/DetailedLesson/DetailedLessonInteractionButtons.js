@@ -1,76 +1,53 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
 import showToast from "@/lib/showToast";
 import { Heart } from "lucide-react";
 import { Brain } from "lucide-react";
 import { ThumbsUp } from "lucide-react";
 import { Share2 } from "lucide-react";
 import { AlertTriangle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const DetailedLessonInteractionButtons = ({ lesson }) => {
-  const { data: session } = authClient.useSession();
-  const user = session?.user;
-  const [selectedReaction, setSelectedReaction] = useState(null);
+const DetailedLessonInteractionButtons = ({ lesson, user }) => {
+  const [isFavorite, setIsFavorite] = useState(
+    lesson.favourites?.includes(user?.id),
+  );
+  const [isLiked, setIsLiked] = useState(lesson.likes?.includes(user?.id));
+  const [likeCount, setLikeCount] = useState(lesson.likesCount || 0);
 
   const handleToggleFavorite = async () => {
-    if (!user) {
-      showToast("Access Restricted. Please login to bookmark.", "error");
-      navigateTo("login");
-      return;
-    }
-
-    try {
-      const res = await fetch(`/api/lessons/${lesson._id}/favorite`, {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/favourite`,
+      {
         method: "POST",
-        headers: { Authorization: `Bearer ${user.id}` },
-      });
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lessonId: lesson._id, userId: user.id }),
+      },
+    );
+
+    if (res.ok) {
+      setIsFavorite(!isFavorite);
       const data = await res.json();
-      if (res.ok) {
-        setLesson({
-          ...lesson,
-          isFavorited: data.isFavorited,
-          favoritesCount: data.favoritesCount,
-        });
-        showToast(
-          data.isFavorited
-            ? "Reflection saved to draft favorites portfolio!"
-            : "Reflection removed from bookmarks.",
-          "success",
-        );
-      }
-    } catch (e) {
-      console.error(e);
+      showToast(data.message);
     }
   };
-  // Handle Reactions increments
-  const handleReactionClick = async (reactionType) => {
-    if (!user) {
-      showToast("Sign in is required to express reactive parameters.", "error");
-      navigateTo("login");
-      return;
-    }
 
-    try {
-      const res = await fetch(`/api/lessons/${lessonId}/like`, {
+  // Handle Reactions increments
+  const handleToogleLike = async (reactionType) => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/like`,
+      {
         method: "POST",
-        headers: { Authorization: `Bearer ${user.id}` },
-      });
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lessonId: lesson._id, userId: user.id }),
+      },
+    );
+
+    if (res.ok) {
+      setIsLiked(!isLiked);
+      setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
       const data = await res.json();
-      if (res.ok) {
-        setLesson({
-          ...lesson,
-          likesCount: data.likesCount,
-        });
-        setSelectedReaction(reactionType);
-        showToast(
-          `Reacted with "${reactionType}"! Reaction counted.`,
-          "success",
-        );
-      }
-    } catch (e) {
-      console.error(e);
+      showToast(data.message);
     }
   };
   // Safe links copy share
@@ -85,27 +62,15 @@ const DetailedLessonInteractionButtons = ({ lesson }) => {
       {/* Interaction emojis group */}
       <div className="flex items-center gap-2">
         <button
-          onClick={() => handleReactionClick("Inspiring")}
+          onClick={() => handleToogleLike()}
           className={`px-4 py-2 border-2 border-black text-[10px] font-black uppercase tracking-widest flex items-center gap-2 rounded-none transition-all cursor-pointer ${
-            selectedReaction === "Inspiring"
+            isLiked
               ? "bg-black text-white dark:bg-white dark:text-black"
               : "bg-white dark:bg-[#121212] text-black dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800"
           }`}
         >
-          <Brain className="w-3.5 h-3.5" />
-          <span>💡 Inspiring ({lesson.likesCount})</span>
-        </button>
-
-        <button
-          onClick={() => handleReactionClick("Helpful")}
-          className={`px-4 py-2 border-2 border-black text-[10px] font-black uppercase tracking-widest flex items-center gap-2 rounded-none transition-all cursor-pointer ${
-            selectedReaction === "Helpful"
-              ? "bg-black text-white dark:bg-white dark:text-black"
-              : "bg-white dark:bg-[#121212] text-black dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800"
-          }`}
-        >
+          <span className="w-3.5 h-3.5">{likeCount}</span>
           <ThumbsUp className="w-3.5 h-3.5" />
-          <span>👍 Helpful</span>
         </button>
       </div>
 
@@ -115,15 +80,13 @@ const DetailedLessonInteractionButtons = ({ lesson }) => {
         <button
           onClick={handleToggleFavorite}
           className={`p-2.5 border-2 border-black rounded-none transition-all cursor-pointer ${
-            lesson.isFavorited
+            isFavorite
               ? "bg-black text-white dark:bg-white dark:text-black"
               : "bg-white dark:bg-[#121212] text-black dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800"
           }`}
           title="Bookmark lesson"
         >
-          <Heart
-            className={`w-4 h-4 ${lesson.isFavorited ? "fill-current" : ""}`}
-          />
+          <Heart className={`w-4 h-4 ${isFavorite ? "fill-current" : ""}`} />
         </button>
 
         {/* Share */}

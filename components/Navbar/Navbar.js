@@ -95,24 +95,24 @@ export default function Navbar() {
             </Link>
           ))}
 
-          {(user && !user.isPremium) ||
-            (user && user.role === "admin" && (
-              <Link
-                href={"/pricing"}
-                className={`flex items-center gap-1 py-1 text-[11px] font-bold uppercase tracking-widest transition-all cursor-pointer text-warning`}
-              >
-                <Award className="w-3.5 h-3.5" />
-                Upgrade
-              </Link>
-            ))}
+          {/* Show Upgrade only for non-premium non-admin users */}
+          {user && !user.isPremium && user.role !== "admin" && (
+            <Link
+              href="/pricing"
+              className="flex items-center gap-1 py-1 text-[11px] font-bold uppercase tracking-widest transition-all cursor-pointer text-warning"
+            >
+              <Award className="w-3.5 h-3.5" />
+              Upgrade
+            </Link>
+          )}
 
-          {(user && user.isPremium) ||
-            (user && user.role === "admin" && (
-              <div className="flex items-center gap-1 px-3 py-1 bg-black text-white dark:bg-white dark:text-black text-[9px] font-black uppercase tracking-wider border border-black dark:border-white">
-                <Award className="w-3 h-3" />
-                Premium Edition
-              </div>
-            ))}
+          {/* Show Premium Edition for premium users and admins */}
+          {user && (user.isPremium || user.role === "admin") && (
+            <div className="flex items-center gap-1 px-3 py-1 bg-black text-white dark:bg-white dark:text-black text-[9px] font-black uppercase tracking-wider border border-black dark:border-white">
+              <Award className="w-3 h-3" />
+              Premium Edition
+            </div>
+          )}
         </div>
 
         {/* Right Side */}

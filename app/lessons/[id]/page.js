@@ -5,29 +5,23 @@ import {
   fetchLessonCountByCreatorId,
 } from "@/lib/fetchLessons";
 import { Clock } from "lucide-react";
-import { Brain } from "lucide-react";
-import { Heart } from "lucide-react";
-import { AlertTriangle } from "lucide-react";
-import { Send } from "lucide-react";
-import { X } from "lucide-react";
-import { ArrowUpRightFromSquare } from "lucide-react";
 import { ChevronRight } from "lucide-react";
 import { Eye } from "lucide-react";
-import { ChevronRightCircle } from "lucide-react";
-import { ChevronsRight } from "lucide-react";
-import { ArrowRight } from "lucide-react";
-import { Trash2 } from "lucide-react";
-import { MessageCircle } from "lucide-react";
-import { Share2 } from "lucide-react";
-import { ThumbsUp } from "lucide-react";
 import { Lock } from "lucide-react";
 import { ChevronLeft } from "lucide-react";
 import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 const LessonDetailPage = async ({ params }) => {
-  const { user } = await auth.api.getSession({ headers: await headers() });
+  const { user } =
+    (await auth.api.getSession({ headers: await headers() })) || {};
+  console.log(user);
+  if (!user) {
+    redirect("/auth/login");
+  }
+
   const { id } = await params;
   const lesson = await fetchLessonById(id);
 
@@ -170,7 +164,7 @@ const LessonDetailPage = async ({ params }) => {
           </div>
         )}
       </div>
-      <DetailedLessonInteractionButtons lesson={lesson} />
+      <DetailedLessonInteractionButtons lesson={lesson} user={user} />
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import FeaturedLifeLessons from "@/components/Home/FeatureLifeLessonsSection/FeaturedLifeLessons";
+import MostSavedLessonSection from "@/components/Home/MostSavedLessonSection/MostSavedLessonSection";
 import Slider from "@/components/Home/SliderSection/Slider";
 import WhyChooseLifelore from "@/components/Home/WhyChooseLifeloreSection/WhyChooseLifelore";
 
@@ -8,6 +9,7 @@ export default function Home() {
       <Slider />
       <WhyChooseLifelore />
       <FeaturedLifeLessons />
+      <MostSavedLessonSection />
     </div>
   );
 }
