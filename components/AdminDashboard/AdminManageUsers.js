@@ -40,7 +40,9 @@ const AdminManageUsers = ({ user, target, index }) => {
         role: data.role ?? nextRole,
       }));
 
-      showSuccessToast("Role updated");
+      showSuccessToast(
+        `${nextRole === "admin" ? "Promoted to Admin" : "Demoted to User"} `,
+      );
     } catch (err) {
       showAlertToast("Role update failed", err.message);
     } finally {
