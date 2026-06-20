@@ -22,38 +22,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html
-      lang="en"
-      data-theme="dark"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="">
-        <div className="min-h-screen flex flex-col bg-[#FDFCFB] text-[#1A1A1A] dark:bg-editorial-dark-bg dark:text-editorial-dark-text transition-colors duration-300 font-sans selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black">
-          <Navbar />
-
-          {children}
-          <FooterSection />
-          <Toaster
-            position="top-right"
-            containerStyle={{
-              top: 100,
-              left: 20,
-              bottom: 20,
-              right: 20,
-            }}
-            toastOptions={{
-              className: "",
-              style: {
-                border: "2px solid #ffffff",
-                borderRadius: "0px",
-                padding: "16px",
-                color: "#faf9f6",
-                backgroundColor: "#0d0d0d",
-              },
-            }}
-          />
-        </div>
-      </body>
-    </html>
+    <div className="min-h-screen flex flex-col bg-[#FDFCFB] text-[#1A1A1A] dark:bg-editorial-dark-bg dark:text-editorial-dark-text transition-colors duration-300 font-sans selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black">
+      {children}
+    </div>
   );
 }
