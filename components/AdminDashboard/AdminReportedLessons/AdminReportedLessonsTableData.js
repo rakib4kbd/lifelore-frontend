@@ -1,8 +1,16 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { fetchAdminLessonReportsByLessonId } from "@/lib/fetchData";
 
-const AdminReportedLessonsTableData = ({ rep, setActiveReportReason }) => {
+const AdminReportedLessonsTableData = ({
+  rep,
+  setActiveReportReason,
+  setReports,
+  onHandleReportAction,
+}) => {
+  const router = useRouter();
+
   return (
     <tr
       key={rep._id}
@@ -36,7 +44,6 @@ const AdminReportedLessonsTableData = ({ rep, setActiveReportReason }) => {
         <button
           onClick={() =>
             fetchAdminLessonReportsByLessonId(rep.lessonId).then((reports) => {
-              console.log(reports);
               setActiveReportReason(reports);
             })
           }
@@ -46,14 +53,14 @@ const AdminReportedLessonsTableData = ({ rep, setActiveReportReason }) => {
         </button>
 
         <button
-          onClick={() => handleReportAction(rep.lessonId, "Ignore")}
+          onClick={() => onHandleReportAction(rep.lessonId, "Ignore")}
           className="px-2 py-1 text-[10.5px] font-semibold text-slate-600 border border-slate-100 dark:border-slate-850 hover:bg-slate-100 rounded"
         >
           Ignore
         </button>
 
         <button
-          onClick={() => handleReportAction(rep.lessonId, "Delete")}
+          onClick={() => onHandleReportAction(rep.lessonId, "Delete")}
           className="px-2 py-1 text-[10.5px] font-bold text-white bg-rose-500 hover:bg-rose-600 rounded cursor-pointer"
         >
           Block/Wipe

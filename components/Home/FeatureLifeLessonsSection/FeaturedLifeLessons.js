@@ -10,7 +10,6 @@ import React from "react";
 
 const FeaturedLifeLessons = async ({ user }) => {
   const featured = await fetchFeaturedLessons();
-  console.log(featured);
   return (
     <section className="space-y-6">
       <div className="flex justify-between items-end border-b border-black/40 dark:border-white/40 pb-3">

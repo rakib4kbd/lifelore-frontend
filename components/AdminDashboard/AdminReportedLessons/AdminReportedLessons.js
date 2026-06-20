@@ -1,11 +1,77 @@
 "use client";
 import { AlertTriangle } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AdminReportedLessonsTableData from "./AdminReportedLessonsTableData";
 import { X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import showSuccessToast from "@/lib/showSuccessToast";
+import showAlertToast from "@/lib/showAlertToast";
 
-const AdminReportedLessons = ({ loading, reports }) => {
+const AdminReportedLessons = () => {
   const [activeReportReason, setActiveReportReason] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [reports, setReports] = useState([]);
+  const router = useRouter();
+
+  const fetchReports = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/report`,
+      );
+      const data = await res.json();
+      setReports(data);
+    } catch (error) {
+      console.error(error);
+      showAlertToast("Failed to load reports");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchReports();
+  }, []);
+
+  const onHandleReportAction = async (lessonId, action) => {
+    if (!lessonId) return showAlertToast("Missing lesson configuration ID");
+
+    try {
+      if (action === "Delete") {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/${lessonId}`,
+          {
+            method: "DELETE",
+          },
+        );
+        if (res.ok) {
+          setActiveReportReason(null);
+          showSuccessToast("Lesson deleted successfully.");
+          await fetchReports();
+        } else {
+          showAlertToast("Failed to delete lesson.");
+        }
+      }
+      if (action === "Ignore") {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/report/${lessonId}`,
+          {
+            method: "DELETE",
+          },
+        );
+        if (res.ok) {
+          setActiveReportReason(null);
+          showSuccessToast("Report ignored successfully.");
+          await fetchReports();
+        } else {
+          showAlertToast("Failed to ignore report.");
+        }
+      }
+    } catch (err) {
+      console.error("Report action failed:", err);
+    }
+  };
+
   return (
     <div className="space-y-6 text-left relative">
       <div>
@@ -46,6 +112,8 @@ const AdminReportedLessons = ({ loading, reports }) => {
                   key={rep._id}
                   rep={rep}
                   setActiveReportReason={setActiveReportReason}
+                  setReports={setReports}
+                  onHandleReportAction={onHandleReportAction}
                 />
               ))}
             </tbody>
@@ -128,7 +196,7 @@ const AdminReportedLessons = ({ loading, reports }) => {
 
               <button
                 onClick={() =>
-                  handleReportAction(activeReportReason[0]?._id, "Ignore")
+                  onHandleReportAction(activeReportReason[0]?._id, "Ignore")
                 }
                 className="px-4 py-2 text-xs bg-slate-100 dark:bg-slate-800 rounded-lg font-semibold"
               >
@@ -136,9 +204,12 @@ const AdminReportedLessons = ({ loading, reports }) => {
               </button>
 
               <button
-                onClick={() =>
-                  handleReportAction(activeReportReason[0]?._id, "Delete")
-                }
+                onClick={() => {
+                  onHandleReportAction(
+                    activeReportReason[0].lessonId,
+                    "Delete",
+                  );
+                }}
                 className="px-4 py-2 text-xs bg-rose-600 text-white rounded-lg font-bold"
               >
                 Destroy Target Lesson

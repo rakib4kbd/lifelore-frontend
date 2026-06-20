@@ -19,7 +19,6 @@ import { redirect } from "next/navigation";
 const LessonDetailPage = async ({ params }) => {
   const { user } =
     (await auth.api.getSession({ headers: await headers() })) || {};
-  console.log(user);
   if (!user) {
     redirect("/auth/login");
   }

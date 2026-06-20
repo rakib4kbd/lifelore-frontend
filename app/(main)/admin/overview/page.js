@@ -6,8 +6,6 @@ import React from "react";
 const DashboardAdminOverviewPage = async () => {
   const adminStats = await fetchAdminStats();
 
-  console.log(adminStats);
-
   const mergedData = {};
 
   adminStats?.userGrowthData?.forEach((item) => {
@@ -37,8 +35,6 @@ const DashboardAdminOverviewPage = async () => {
   const growthData = Object.values(mergedData).sort(
     (a, b) => new Date(a.date) - new Date(b.date),
   );
-
-  console.log("Growth Data:", growthData);
 
   return (
     <div className="space-y-8 text-left">

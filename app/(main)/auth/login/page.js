@@ -49,7 +49,6 @@ const LoginPage = () => {
         email: acc.email,
         password: acc.pass,
       });
-      console.log(data);
       if (data.user.role === "admin") {
         router.push("/admin/overview");
       } else {

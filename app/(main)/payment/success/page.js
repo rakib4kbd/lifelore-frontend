@@ -16,7 +16,6 @@ const CheckoutSuccess = async ({ searchParams }) => {
     expand: ["line_items", "payment_intent"],
   });
 
-  console.log(status, customerEmail, userId);
   if (status === "open") {
     return redirect("/");
   }
@@ -32,8 +31,6 @@ const CheckoutSuccess = async ({ searchParams }) => {
         body: JSON.stringify({ isPremium: true }),
       },
     );
-
-    console.log(await res.status);
 
     if (res.status !== 200) {
       return (
