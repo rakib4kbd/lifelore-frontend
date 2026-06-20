@@ -35,13 +35,13 @@ const DashboardAside = ({ user }) => {
     },
     {
       label: "My Saved Wisdom",
-      href: "/dashboard/saved-lessons",
+      href: "/dashboard/my-favorites",
       icon: Heart,
       key: "reports",
     },
     {
-      label: "Manage Settings",
-      href: "/dashboard/settings",
+      label: "Manage Profile",
+      href: "/dashboard/profile",
       icon: Settings,
       key: "profile",
     },

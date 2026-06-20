@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { PlusCircle, Lock } from "lucide-react";
-import showToast from "@/lib/showAlertToast";
 
 const AddLesson = ({ user }) => {
   const [loading, setLoading] = useState(false);
@@ -67,38 +66,40 @@ const AddLesson = ({ user }) => {
         throw new Error(data.error || "Failed to persist lesson.");
       }
 
-      showAlertToast(
+      showToast(
         "Wisdom logged successfully in secure cloud ledger!",
         "success",
       );
 
       reset();
     } catch (err) {
-      showAlertToast(err.message, "error");
+      showToast(err.message, "error");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-7xl mx-auto rounded-none border-2 border-black dark:border-white bg-[#FAF9F6] dark:bg-editorial-dark-bg p-8">
-      <div className="space-y-6 text-left">
-        <div>
-          <h2 className="text-xl font-black uppercase tracking-wide text-black dark:text-white flex items-center gap-2">
-            <PlusCircle className="w-5 h-5" />
-            Deposit Mindful Wisdom Log
-          </h2>
+    <div className="space-y-6 p-6">
+      {/* Header */}
+      <div>
+        <h2 className="flex items-center gap-2 text-xl font-black uppercase tracking-widest text-black dark:text-white">
+          <PlusCircle className="h-5 w-5" />
+          Deposit Mindful Wisdom Log
+        </h2>
 
-          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
-            Capture lessons learned from mistakes, relationship breakthroughs,
-            or work philosophies securely.
-          </p>
-        </div>
+        <p className="mt-1 text-sm text-zinc-500">
+          Capture lessons learned from mistakes, relationship breakthroughs, or
+          work philosophies securely.
+        </p>
+      </div>
 
+      {/* Form Card */}
+      <div className="rounded-none border border-zinc-800 bg-zinc-950 p-6">
         <form onSubmit={handleSubmit(handleCreateSubmit)} className="space-y-6">
           {/* Title */}
           <div className="space-y-2">
-            <label className="text-xs font-black uppercase tracking-wider text-black dark:text-white block">
+            <label className="block text-xs text-zinc-400 uppercase tracking-wide">
               Lesson Topic Title
             </label>
 
@@ -108,7 +109,7 @@ const AddLesson = ({ user }) => {
               {...register("title", {
                 required: "Title is required",
               })}
-              className="w-full border-2 border-black dark:border-white bg-white dark:bg-editorial-dark-bg text-black dark:text-white px-4 py-3 text-sm focus:outline-none"
+              className="w-full rounded-none border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm text-zinc-200 outline-none transition focus:border-zinc-700"
             />
 
             {errors.title && (
@@ -117,15 +118,15 @@ const AddLesson = ({ user }) => {
           </div>
 
           {/* Category + Tone */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid gap-5 md:grid-cols-2">
             <div className="space-y-2">
-              <label className="text-xs font-black uppercase tracking-wider text-black dark:text-white block">
+              <label className="block text-xs text-zinc-400 uppercase tracking-wide">
                 Lesson Category
               </label>
 
               <select
                 {...register("category")}
-                className="w-full border-2 border-black dark:border-white bg-white dark:bg-editorial-dark-bg text-black dark:text-white px-4 py-3 text-sm focus:outline-none"
+                className="w-full rounded-none border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm text-zinc-300 outline-none transition focus:border-zinc-700"
               >
                 {categories.map((c) => (
                   <option key={c} value={c}>
@@ -136,13 +137,13 @@ const AddLesson = ({ user }) => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-black uppercase tracking-wider text-black dark:text-white block">
+              <label className="block text-xs text-zinc-400 uppercase tracking-wide">
                 Emotional Tone
               </label>
 
               <select
                 {...register("emotionalTone")}
-                className="w-full border-2 border-black dark:border-white bg-white dark:bg-editorial-dark-bg text-black dark:text-white px-4 py-3 text-sm focus:outline-none"
+                className="w-full rounded-none border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm text-zinc-300 outline-none transition focus:border-zinc-700"
               >
                 {emotionalTones.map((tone) => (
                   <option key={tone} value={tone}>
@@ -155,11 +156,11 @@ const AddLesson = ({ user }) => {
 
           {/* Description */}
           <div className="space-y-2">
-            <label className="text-xs font-black uppercase tracking-wider text-black dark:text-white block">
+            <label className="block text-xs text-zinc-400 uppercase tracking-wide">
               Full Insight Story
             </label>
 
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-zinc-500">
               Explain the background, trigger, mistake made and the actionable
               takeaway.
             </p>
@@ -170,7 +171,7 @@ const AddLesson = ({ user }) => {
               {...register("description", {
                 required: "Description is required",
               })}
-              className="w-full border-2 border-black dark:border-white bg-white dark:bg-editorial-dark-bg text-black dark:text-white px-4 py-3 text-sm focus:outline-none"
+              className="w-full rounded-none border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm text-zinc-200 outline-none transition focus:border-zinc-700"
             />
 
             {errors.description && (
@@ -181,15 +182,15 @@ const AddLesson = ({ user }) => {
           </div>
 
           {/* Visibility + Access */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid gap-5 md:grid-cols-2">
             <div className="space-y-2">
-              <label className="text-xs font-black uppercase tracking-wider text-black dark:text-white block">
+              <label className="block text-xs text-zinc-400 uppercase tracking-wide">
                 Draft Visibility
               </label>
 
               <select
                 {...register("visibility")}
-                className="w-full border-2 border-black dark:border-white bg-white dark:bg-editorial-dark-bg text-black dark:text-white px-4 py-3 text-sm focus:outline-none"
+                className="w-full rounded-none border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm text-zinc-300 outline-none transition focus:border-zinc-700"
               >
                 <option value="Public">Public</option>
                 <option value="Private">Private</option>
@@ -197,17 +198,17 @@ const AddLesson = ({ user }) => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-black uppercase tracking-wider text-black dark:text-white flex items-center gap-2">
+              <label className="flex items-center gap-2 text-xs text-zinc-400 uppercase tracking-wide">
                 Access Level
                 {!user?.isPremium && (
-                  <Lock className="w-4 h-4 text-amber-500" />
+                  <Lock className="h-4 w-4 text-amber-500" />
                 )}
               </label>
 
               <select
                 disabled={!user?.isPremium && user?.role !== "admin"}
                 {...register("accessLevel")}
-                className="w-full border-2 border-black dark:border-white bg-white dark:bg-editorial-dark-bg text-black dark:text-white px-4 py-3 text-sm focus:outline-none"
+                className="w-full rounded-none border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm text-zinc-300 outline-none transition focus:border-zinc-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <option value="Free">Free (Accessible to all visitors)</option>
 
@@ -217,17 +218,18 @@ const AddLesson = ({ user }) => {
               </select>
 
               {!user?.isPremium && user?.role !== "admin" && (
-                <p className="text-xs text-amber-600 dark:text-amber-400">
+                <p className="text-xs text-amber-500">
                   🔒 Upgrade to Premium to create Premium-only lessons.
                 </p>
               )}
             </div>
           </div>
 
+          {/* Submit */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 border-2 border-black dark:border-white bg-black text-white dark:bg-white dark:text-black text-xs font-black uppercase tracking-[0.2em] hover:bg-editorial-dark-bg hover:border-white hover:text-white transition-colors disabled:opacity-50 cursor-pointer"
+            className="w-full rounded-none border border-zinc-800 px-4 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-zinc-200 transition hover:bg-zinc-900 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? "RECORDING WISDOM..." : "REGISTER INSIGHT"}
           </button>

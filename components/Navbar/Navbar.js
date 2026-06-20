@@ -185,7 +185,7 @@ export default function Navbar() {
 
                     <div className="p-2 space-y-1">
                       <Link
-                        href="/profile"
+                        href="/dashboard/profile"
                         onClick={() => {
                           setDropdownOpen(false);
                         }}

@@ -4,10 +4,13 @@ import { Sparkles } from "lucide-react";
 import { ArrowRight } from "lucide-react";
 import { ChevronRight } from "lucide-react";
 import { motion } from "motion/react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Slider = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const router = useRouter();
 
   const slides = [
     {
@@ -19,7 +22,7 @@ const Slider = () => {
       accent:
         "bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 border-indigo-200/50",
       cta: "Record Your First Lesson",
-      action: () => navigateTo("dashboard"),
+      navigation: "/dashboard/add-lesson",
     },
     {
       title: "Learn Mutual Ethics from the Crowd",
@@ -30,7 +33,7 @@ const Slider = () => {
       accent:
         "bg-emerald-600/10 text-emerald-600 dark:text-emerald-400 border-emerald-200/50",
       cta: "Explore Public Archives",
-      action: () => navigateTo("lessons"),
+      navigation: "/lessons",
     },
     {
       title: "Unlock Advanced Mental Models",
@@ -41,7 +44,7 @@ const Slider = () => {
       accent:
         "bg-amber-600/10 text-amber-600 dark:text-amber-400 border-amber-200/50",
       cta: "See Pricing Schemes",
-      action: () => navigateTo("pricing"),
+      navigation: "/pricing",
     },
   ];
 
@@ -83,20 +86,20 @@ const Slider = () => {
           </motion.p>
 
           <div className="flex flex-wrap items-center gap-4 pt-4">
-            <button
-              onClick={slides[currentSlide].action}
+            <Link
+              href={slides[currentSlide].navigation}
               className="px-6 py-3 border-2 border-black dark:border-white bg-black hover:bg-transparent text-white hover:text-black dark:bg-white dark:hover:bg-transparent dark:text-black dark:hover:text-white text-[11px] uppercase tracking-widest font-black transition-colors flex items-center gap-2 cursor-pointer rounded-none"
             >
               {slides[currentSlide].cta}
               <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+            </Link>
 
-            <button
-              onClick={() => navigateTo("lessons")}
+            <Link
+              href="/lessons"
               className="px-5 py-3 border-2 border-neutral-300 dark:border-neutral-700 hover:border-black dark:hover:border-white bg-transparent text-neutral-800 dark:text-neutral-200 text-[11px] uppercase tracking-widest font-bold transition-colors cursor-pointer rounded-none"
             >
               Inspect Public Library
-            </button>
+            </Link>
           </div>
         </div>
 
