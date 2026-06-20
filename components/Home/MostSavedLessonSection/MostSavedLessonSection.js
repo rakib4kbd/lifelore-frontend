@@ -90,47 +90,49 @@ const MostSavedLessonSection = async () => {
         </div>
 
         <div className="p-6 bg-[#F9F7F2] dark:bg-[#181816] border-2 border-black dark:border-white rounded-none shadow-none space-y-4">
-          {contributors.map((contrib, idx) => (
-            <div
-              key={contrib.email}
-              className="flex items-center justify-between p-3 bg-white dark:bg-[#121212] border border-black dark:border-white/50 rounded-none hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.7)] transition-all"
-            >
-              <div className="flex items-center gap-3">
-                <div className="relative shrink-0">
-                  <figure className="w-10 h-10">
-                    <Image
-                      src={
-                        contrib.image ||
-                        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
-                      }
-                      alt={contrib.name}
-                      fill
-                      className="w-10 h-10 rounded-full border border-black dark:border-white object-cover"
-                    />
-                  </figure>
-                  <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-none bg-black text-white text-[9px] font-black flex items-center justify-center border border-black">
-                    {idx + 1}
+          {contributors
+            .filter((contrib) => contrib.totalLessons > 0)
+            .map((contrib, idx) => (
+              <div
+                key={contrib.email}
+                className="flex items-center justify-between p-3 bg-white dark:bg-[#121212] border border-black dark:border-white/50 rounded-none hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.7)] transition-all"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="relative shrink-0">
+                    <figure className="w-10 h-10">
+                      <Image
+                        src={
+                          contrib.image ||
+                          "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
+                        }
+                        alt={contrib.name}
+                        fill
+                        className="w-10 h-10 rounded-full border border-black dark:border-white object-cover"
+                      />
+                    </figure>
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-none bg-black text-white text-[9px] font-black flex items-center justify-center border border-black">
+                      {idx + 1}
+                    </div>
+                  </div>
+                  <div className="text-left">
+                    <p className="text-xs font-black uppercase tracking-wider text-neutral-800 dark:text-neutral-200 truncate max-w-[125px]">
+                      {contrib.name}
+                    </p>
+                    <p className="text-[10px] font-mono text-neutral-500 dark:text-neutral-400 truncate max-w-[125px]">
+                      {contrib.email}
+                    </p>
                   </div>
                 </div>
-                <div className="text-left">
-                  <p className="text-xs font-black uppercase tracking-wider text-neutral-800 dark:text-neutral-200 truncate max-w-[125px]">
-                    {contrib.name}
-                  </p>
-                  <p className="text-[10px] font-mono text-neutral-500 dark:text-neutral-400 truncate max-w-[125px]">
-                    {contrib.email}
-                  </p>
+
+                <div className="text-right">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-black text-white dark:bg-white dark:text-black border border-black font-mono text-[9px] font-black uppercase tracking-widest">
+                    <Zap className="w-3 h-3" />
+                    {contrib.totalLessons}{" "}
+                    {contrib.totalLessons === 1 ? "Lesson" : "Lessons"}
+                  </span>
                 </div>
               </div>
-
-              <div className="text-right">
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-black text-white dark:bg-white dark:text-black border border-black font-mono text-[9px] font-black uppercase tracking-widest">
-                  <Zap className="w-3 h-3" />
-                  {contrib.totalLessons}{" "}
-                  {contrib.totalLessons === 1 ? "Lesson" : "Lessons"}
-                </span>
-              </div>
-            </div>
-          ))}
+            ))}
 
           <div className="bg-white dark:bg-[#121212] p-4 text-center text-[11px] text-neutral-600 dark:text-neutral-400 font-serif italic border border-black/60 leading-relaxed rounded-none">
             &quot;Publish wisdom journals inside your Self Writing Suite to

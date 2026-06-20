@@ -88,10 +88,13 @@ const LessonDetailPage = async ({ params }) => {
               <p className="font-serif font-black text-sm text-black dark:text-white">
                 {lesson.creatorName}
               </p>
-              <p className=" dark:bg-editorial-dark-bg rounded-none flex items-center gap-0 text-[10px] uppercase font-black tracking-widest text-[#121212] dark:text-white/50">
+              <Link
+                href={`/profile/${lesson.creatorId}`}
+                className=" dark:bg-editorial-dark-bg rounded-none flex items-center gap-0 text-[10px] uppercase font-black tracking-widest text-[#121212] dark:text-white/50"
+              >
                 View All ({count}) Lessons by this author
                 <ChevronRight className="w-4 h-4" />
-              </p>
+              </Link>
             </div>
           </div>
           <div className="flex flex-col items-end">
@@ -157,9 +160,12 @@ const LessonDetailPage = async ({ params }) => {
                   </p>
                 </div>
                 <div className="pt-2">
-                  <button className="w-full py-3 border-2 border-black dark:border-white bg-black hover:bg-white text-white hover:text-black dark:bg-white dark:hover:bg-transparent dark:text-black dark:hover:text-white text-xs font-black uppercase tracking-widest rounded-none transition-colors cursor-pointer flex items-center justify-center gap-2">
+                  <Link
+                    href={"/pricing"}
+                    className="w-full py-3 border-2 border-black dark:border-white bg-black hover:bg-white text-white hover:text-black dark:bg-white dark:hover:bg-transparent dark:text-black dark:hover:text-white text-xs font-black uppercase tracking-widest rounded-none transition-colors cursor-pointer flex items-center justify-center gap-2"
+                  >
                     Examine Premium Upgrade Plans
-                  </button>
+                  </Link>
                   <p className="text-[9px] font-bold uppercase tracking-widest text-[#121212]/30 dark:text-white/30 mt-2">
                     Zero recurring limits configuration active
                   </p>

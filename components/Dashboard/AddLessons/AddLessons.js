@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { PlusCircle, Lock } from "lucide-react";
+import showSuccessToast from "@/lib/showSuccessToast";
+import showAlertToast from "@/lib/showAlertToast";
 
 const AddLesson = ({ user }) => {
   const [loading, setLoading] = useState(false);
@@ -66,14 +68,14 @@ const AddLesson = ({ user }) => {
         throw new Error(data.error || "Failed to persist lesson.");
       }
 
-      showToast(
+      showSuccessToast(
         "Wisdom logged successfully in secure cloud ledger!",
         "success",
       );
 
       reset();
     } catch (err) {
-      showToast(err.message, "error");
+      showAlertToast(err.message, "error");
     } finally {
       setLoading(false);
     }
