@@ -20,7 +20,7 @@ const PublicProfilePage = async ({ params }) => {
     <>
       <div className="flex mx-auto my-10">
         <div className="flex gap-5">
-          <div className="lg:col-span-7 rounded-none border border-zinc-800 bg-zinc-950 p-6">
+          <div className="lg:col-span-7 rounded-none border border-zinc-800 bg-zinc-950 p-6 max-w-7xl min-w-2xl">
             <form className="space-y-6">
               <div className="space-y-2">
                 <label className="block text-xs uppercase tracking-wide text-zinc-400">
@@ -101,7 +101,7 @@ const PublicProfilePage = async ({ params }) => {
         </div>
       </div>
 
-      <div className="flex items-center mx-auto">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center mx-auto">
         {profile.lessons.length == 0 && <>No lessons found.</>}
         {profile.lessons.map((lesson, idx) => {
           // Check if blurred/locked

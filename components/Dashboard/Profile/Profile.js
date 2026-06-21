@@ -2,6 +2,10 @@
 
 import { useForm } from "react-hook-form";
 import { Award, Globe, Settings } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import showAlertToast from "@/lib/showAlertToast";
+import showSuccessToast from "@/lib/showSuccessToast";
+import Image from "next/image";
 
 const DashboardProfile = ({ user, stats }) => {
   const loading = false;
@@ -22,8 +26,18 @@ const DashboardProfile = ({ user, stats }) => {
   const previewName = watch("name");
   const previewImage = watch("image");
 
-  const onSubmit = async (data) => {
-    console.log(data);
+  const onSubmit = async (formData) => {
+    {
+      const { error } = await authClient.updateUser({
+        name: formData.name,
+        image: formData.image,
+      });
+      if (error) {
+        showAlertToast(`Error updating profile: ${error.message}`);
+      } else {
+        showSuccessToast("Profile updated successfully.");
+      }
+    }
   };
 
   return (
@@ -87,9 +101,7 @@ const DashboardProfile = ({ user, stats }) => {
               </label>
 
               <input
-                {...register("image", {
-                  required: "Image URL is required",
-                })}
+                {...register("image")}
                 placeholder="https://..."
                 className="w-full rounded-none border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm text-zinc-200 outline-none transition focus:border-zinc-700"
               />
@@ -112,14 +124,17 @@ const DashboardProfile = ({ user, stats }) => {
         {/* Preview */}
         <div className="lg:col-span-5 rounded-none border border-zinc-800 bg-zinc-950 p-6">
           <div className="flex flex-col items-center text-center">
-            <img
-              src={
-                previewImage ||
-                "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
-              }
-              alt="preview"
-              className="h-24 w-24 rounded-full object-cover ring-1 ring-zinc-800"
-            />
+            <figure className="relative w-20 h-20">
+              <Image
+                src={
+                  previewImage ||
+                  "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
+                }
+                alt="preview"
+                fill
+                className="h-24 w-24 rounded-full object-cover ring-1 ring-zinc-800"
+              />
+            </figure>
 
             <h3 className="mt-4 text-lg font-bold text-white">
               {previewName || "Unnamed User"}

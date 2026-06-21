@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import { Edit } from "lucide-react";
 import { Lock } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import MyLessonsTableRow from "./MyLessonsTableRow";
 import { Filter } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -10,6 +11,8 @@ import { useForm } from "react-hook-form";
 const MyLessons = ({ lessons, user }) => {
   const [loading, setLoading] = useState(false);
   const [editingLesson, setEditingLesson] = useState(null);
+
+  const router = useRouter();
 
   const categories = [
     "Personal Growth",
@@ -41,8 +44,39 @@ const MyLessons = ({ lessons, user }) => {
   }, [editingLesson, reset]);
 
   const onSubmit = async (data) => {
-    console.log(data);
-    // Update lesson here
+    // send update to backend
+    try {
+      setLoading(true);
+      const lessonId = editingLesson?._id;
+      if (!lessonId) return;
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/api/admin/lessons/${lessonId}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        },
+      );
+
+      if (!res.ok) {
+        const txt = await res.text();
+        console.error("Failed to update lesson:", txt);
+        return;
+      }
+
+      // refresh server-side data for this page
+
+      // close modal and reset form
+      setEditingLesson(null);
+
+      router.refresh();
+      reset();
+    } catch (err) {
+      console.error("Error updating lesson:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -245,6 +279,7 @@ const MyLessons = ({ lessons, user }) => {
               <div className="flex justify-end gap-3 border-t border-zinc-800 pt-5">
                 <button
                   type="button"
+                  onClick={() => setEditingLesson(null)}
                   className="border border-zinc-800 px-5 py-2 text-zinc-400 hover:border-zinc-600 hover:text-white"
                 >
                   Cancel

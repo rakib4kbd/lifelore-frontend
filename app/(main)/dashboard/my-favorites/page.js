@@ -1,14 +1,15 @@
+import MyFavouritesDeleteButton from "@/components/Dashboard/MyFavourites/MyFavouritesDeleteButton";
 import { auth } from "@/lib/auth";
 import { fetchFavouriteLessonsByUserId } from "@/lib/fetchData";
 import { Filter, Heart } from "lucide-react";
 import { headers } from "next/headers";
+import Link from "next/link";
 
 const MyFavouritePage = async () => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  const user = session?.user;
+  const { user } =
+    (await auth.api.getSession({
+      headers: await headers(),
+    })) || {};
 
   if (!user) {
     return (
@@ -135,13 +136,17 @@ const MyFavouritePage = async () => {
                     {/* Actions */}
                     <td className="px-5 py-4">
                       <div className="flex justify-end gap-2">
-                        <button className="rounded-none border border-zinc-800 px-3 py-1.5 text-[11px] font-medium text-zinc-300 transition hover:bg-zinc-900">
+                        <Link
+                          href={`/lessons/${fav._id}`}
+                          className="rounded-none border border-zinc-800 px-3 py-1.5 text-[11px] font-medium text-zinc-300 transition hover:bg-zinc-900"
+                        >
                           Details
-                        </button>
+                        </Link>
 
-                        <button className="rounded-none border border-zinc-800 px-3 py-1.5 text-[11px] font-medium text-zinc-400 transition hover:bg-zinc-900 hover:text-zinc-100">
-                          Remove
-                        </button>
+                        <MyFavouritesDeleteButton
+                          userId={user.id}
+                          lessonId={fav._id}
+                        />
                       </div>
                     </td>
                   </tr>

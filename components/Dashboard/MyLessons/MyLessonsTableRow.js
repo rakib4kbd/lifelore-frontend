@@ -11,10 +11,38 @@ import { Trash2 } from "lucide-react";
 import { Star } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
+import { fetchLessonById } from "@/lib/fetchData";
+import { useRouter } from "next/navigation";
 
 const MyLessonsTableRow = ({ lesson, index, user, setEditingLesson }) => {
+  const router = useRouter();
   const [visibility, setVisibility] = useState(lesson.visibility);
   const [accessLevel, setAccessLevel] = useState(lesson.accessLevel);
+  const handleDelete = async (lessonId) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this lesson? This action cannot be undone.",
+    );
+
+    if (!confirmed) return;
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/${lessonId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!res.ok) {
+      showAlertToast("Failed to delete lesson.");
+      return;
+    }
+
+    showSuccessToast("Lesson deleted successfully.");
+    router.refresh();
+  };
 
   const handleVisibilityChange = async () => {
     const lessonId = lesson._id;
@@ -40,6 +68,7 @@ const MyLessonsTableRow = ({ lesson, index, user, setEditingLesson }) => {
 
     setVisibility(nextVisibility);
     showSuccessToast(`Lesson visibility updated to ${nextVisibility}.`);
+    router.refresh();
   };
 
   const handleAccessLevelChange = async () => {
@@ -69,7 +98,9 @@ const MyLessonsTableRow = ({ lesson, index, user, setEditingLesson }) => {
     }
 
     setAccessLevel(nextAccessLevel);
+
     showSuccessToast(`Lesson access level updated to ${nextAccessLevel}.`);
+    router.refresh();
   };
 
   return (
@@ -104,17 +135,17 @@ const MyLessonsTableRow = ({ lesson, index, user, setEditingLesson }) => {
         <span
           onClick={handleVisibilityChange}
           className={`inline-flex items-center gap-1 rounded-none border px-2.5 py-1 text-[10px] font-medium ${
-            visibility === "Public"
+            lesson.visibility === "Public"
               ? "border-emerald-600 text-emerald-500"
               : "border-zinc-700 text-zinc-400"
           }`}
         >
-          {visibility === "Public" ? (
+          {lesson.visibility === "Public" ? (
             <Globe className="h-3 w-3" />
           ) : (
             <Lock className="h-3 w-3" />
           )}
-          {visibility}
+          {lesson.visibility}
         </span>
       </td>
 
@@ -123,13 +154,13 @@ const MyLessonsTableRow = ({ lesson, index, user, setEditingLesson }) => {
         <span
           onClick={handleAccessLevelChange}
           className={`inline-flex items-center gap-1 rounded-none border px-2.5 py-1 text-[10px] font-medium ${
-            accessLevel === "Premium"
+            lesson.accessLevel === "Premium"
               ? "border-amber-500 text-amber-500"
               : "border-zinc-700 text-zinc-400"
           }`}
         >
           <Lock className="h-3 w-3" />
-          {accessLevel}
+          {lesson.accessLevel}
         </span>
       </td>
 
@@ -158,15 +189,28 @@ const MyLessonsTableRow = ({ lesson, index, user, setEditingLesson }) => {
             <BookOpen className="h-3.5 w-3.5" />
           </Link>
           <button
-            onClick={() => {
-              setEditingLesson(lesson);
+            onClick={async () => {
+              try {
+                // fetch latest lesson data before opening edit modal
+                const fresh = await fetchLessonById(lesson._id);
+                setEditingLesson(fresh);
+              } catch (err) {
+                console.error("Failed to load lesson for editing:", err);
+                // fallback to existing lesson object
+                setEditingLesson(lesson);
+              }
             }}
             className="rounded-none border border-zinc-800 px-3 py-1.5 text-[11px] font-medium text-zinc-300 transition hover:bg-zinc-900"
           >
             <Edit className="h-3.5 w-3.5" />
           </button>
 
-          <button className="rounded-none border border-zinc-800 px-3 py-1.5 text-[11px] font-medium text-zinc-400 transition hover:bg-zinc-900 hover:text-red-400">
+          <button
+            onClick={() => {
+              handleDelete(lesson._id);
+            }}
+            className="rounded-none border border-zinc-800 px-3 py-1.5 text-[11px] font-medium text-zinc-400 transition hover:bg-zinc-900 hover:text-red-400"
+          >
             <Trash2 className="h-3.5 w-3.5" />
           </button>
         </div>
