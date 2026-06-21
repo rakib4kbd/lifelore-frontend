@@ -124,7 +124,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto my-12 p-6 sm:p-8 bg-white dark:bg-[#121212] border-2 border-black dark:border-white rounded-none shadow-none space-y-6 text-left">
+    <div className="max-w-md mx-auto my-12 p-6 sm:p-8 bg-white dark:bg-editorial-dark-bg border-2 border-black dark:border-white rounded-none shadow-none space-y-6 text-left">
       {/* Header */}
       <div className="text-center space-y-2">
         <div className="w-12 h-12 bg-black text-white dark:bg-white dark:text-black flex items-center justify-center mx-auto border-2 border-black">
@@ -177,7 +177,7 @@ const LoginPage = () => {
               <input
                 type="text"
                 placeholder="Marcus Aurelius"
-                className="w-full pl-9 pr-3 py-2 border-2 border-black bg-[#FAF9F6] dark:bg-neutral-900 text-xs font-bold uppercase tracking-wider text-black dark:text-white focus:outline-none focus:border-black rounded-none placeholder:text-neutral-400"
+                className="w-full pl-9 pr-3 py-2 border-2 border-black bg-editorial-bg dark:bg-neutral-900 text-xs font-bold uppercase tracking-wider text-black dark:text-white focus:outline-none focus:border-black rounded-none placeholder:text-neutral-400"
                 {...register("name", {
                   required:
                     mode === "register" ? "Full name is required" : false,
@@ -203,7 +203,7 @@ const LoginPage = () => {
             <input
               type="email"
               placeholder="emperor@rome.com"
-              className="w-full pl-9 pr-3 py-2 border-2 border-black bg-[#FAF9F6] dark:bg-neutral-900 text-xs font-bold uppercase tracking-wider text-black dark:text-white focus:outline-none focus:border-black rounded-none placeholder:text-neutral-400"
+              className="w-full pl-9 pr-3 py-2 border-2 border-black bg-editorial-card dark:bg-neutral-900 text-xs font-bold uppercase tracking-wider text-editorial-text dark:text-editorial-dark-text focus:outline-none focus:border-black rounded-none placeholder:text-neutral-400"
               {...register("email", {
                 required: "Email is required",
                 pattern: {
@@ -249,7 +249,7 @@ const LoginPage = () => {
             <input
               type="password"
               placeholder="••••••••"
-              className="w-full pl-9 pr-3 py-2 border-2 border-black bg-[#FAF9F6] dark:bg-neutral-900 text-xs font-bold uppercase tracking-wider text-black dark:text-white focus:outline-none focus:border-black rounded-none placeholder:text-neutral-400"
+              className="w-full pl-9 pr-3 py-2 border-2 border-black bg-editorial-card dark:bg-neutral-900 text-xs font-bold uppercase tracking-wider text-editorial-text dark:text-editorial-dark-text focus:outline-none focus:border-black rounded-none placeholder:text-neutral-400"
               {...register("password", {
                 required: "Password is required",
 
@@ -279,7 +279,7 @@ const LoginPage = () => {
           )}
 
           {mode === "register" && (
-            <div className="bg-[#F9F7F2] dark:bg-neutral-900 p-3 rounded-none text-[10px] text-neutral-500 space-y-1 border border-black/30">
+            <div className="bg-editorial-card dark:bg-neutral-900 p-3 rounded-none text-[10px] text-neutral-500 space-y-1 border border-black/30">
               <p className="font-bold text-[#121212] dark:text-white uppercase tracking-wider">
                 Security Requirements:
               </p>
@@ -332,7 +332,7 @@ const LoginPage = () => {
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t-2 border-black dark:border-white/20" />
         </div>
-        <span className="relative bg-white dark:bg-[#121212] px-3 text-[9px] text-neutral-400 uppercase tracking-widest font-black">
+        <span className="relative bg-editorial-bg dark:bg-editorial-dark-card px-3 text-[9px] text-neutral-400 uppercase tracking-widest font-black">
           Verify Identity Gateway
         </span>
       </div>
@@ -368,7 +368,7 @@ const LoginPage = () => {
       </button>
 
       {/* Preset Admin/Demo Portals (Save time for grading) */}
-      <div className="bg-[#F9F7F2] dark:bg-neutral-900/50 p-4 border-2 border-dashed border-black/40 dark:border-white/40 text-xs rounded-none">
+      <div className="bg-editorial-card dark:bg-neutral-900/50 p-4 border-2 border-dashed border-black/40 dark:border-white/40 text-xs rounded-none">
         <p className="font-black text-black dark:text-white flex items-center gap-1 mb-2 uppercase tracking-widest text-[10px]">
           <ShieldCheck className="w-4 h-4 text-emerald-600" />
           Instant Evaluator Portals (1-click)

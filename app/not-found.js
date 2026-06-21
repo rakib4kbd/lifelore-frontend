@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const NotFound = () => {
   return (
-    <div className="my-10 py-24 text-center max-w-xl mx-auto space-y-6 border-2 border-black dark:border-white p-12 bg-[#F9F7F2] dark:bg-[#181816]">
+    <div className="my-10 py-24 text-center max-w-xl mx-auto space-y-6 border-2 border-black dark:border-white p-12 bg-editorial-card dark:bg-editorial-dark-card">
       <h2 className="text-5xl font-serif italic text-black dark:text-white">
         Path Misplaced
       </h2>

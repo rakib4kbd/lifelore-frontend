@@ -31,10 +31,10 @@ export default async function RootLayout({ children }) {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FDFCFB] text-[#1A1A1A] dark:bg-editorial-dark-bg dark:text-editorial-dark-text transition-colors duration-300 font-sans selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black">
-      <div className="flex mx-auto w-7xl max-w-7xl my-5 justify-between gap-2">
+    <div className="min-h-screen flex flex-col bg-editorial-bg text-editorial-text dark:bg-editorial-dark-bg dark:text-editorial-dark-text transition-colors duration-300 font-sans selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black">
+      <div className="flex flex-col md:flex-row mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 my-8 gap-6">
         <DashboardAside user={user} />
-        <div className="flex-1">{children}</div>
+        <div className="flex-1 min-w-0">{children}</div>
       </div>
     </div>
   );

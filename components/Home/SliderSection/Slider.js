@@ -54,10 +54,10 @@ const Slider = () => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 6000);
     return () => clearInterval(interval);
-  }, []);
+  }, [slides.length]);
 
   return (
-    <section className="relative overflow-hidden bg-white dark:bg-[#121212] p-8 sm:p-12 border-2 border-black dark:border-white/50 rounded-none shadow-none">
+    <section className="relative overflow-hidden bg-editorial-bg dark:bg-editorial-dark-bg p-8 sm:p-12 border-2 border-black dark:border-white/50 rounded-none shadow-none">
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[420px]">
         {/* Slide Text Content */}
         <div className="lg:col-span-7 flex flex-col justify-center text-left space-y-6">
@@ -114,10 +114,10 @@ const Slider = () => {
             alt="Slide illustration"
             className="absolute inset-0 w-full h-full object-cover grayscale brightness-90 hover:grayscale-0 transition-all duration-700"
           />
-          <div className="absolute inset-0 bg-black/10 dark:bg-[#000000]/20 blend-overlay" />
+          <div className="absolute inset-0 bg-black/10 dark:bg-black/20 blend-overlay" />
 
           {/* Quick tag overlays */}
-          <div className="absolute bottom-4 left-4 right-4 p-4 rounded-none bg-[#FAF9F6] dark:bg-[#181816] border border-black dark:border-white text-black dark:text-white">
+          <div className="absolute bottom-4 left-4 right-4 p-4 rounded-none bg-editorial-card dark:bg-editorial-dark-card border border-black dark:border-white text-editorial-text dark:text-editorial-dark-text">
             <p className="text-[9px] font-mono tracking-widest text-neutral-550 dark:text-neutral-400 uppercase">
               wisdom archive capsule
             </p>
@@ -136,7 +136,7 @@ const Slider = () => {
               (prev) => (prev - 1 + slides.length) % slides.length,
             )
           }
-          className="p-1.5 rounded-none bg-[#FAF9F6] dark:bg-[#181816] hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black text-black dark:text-white shrink-0 border border-black dark:border-white transition-colors cursor-pointer"
+          className="p-1.5 rounded-none bg-editorial-bg dark:bg-editorial-dark-card hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black text-editorial-text dark:text-editorial-dark-text shrink-0 border border-black dark:border-white transition-colors cursor-pointer"
         >
           <ChevronLeft className="w-4 h-4" />
         </button>
@@ -157,7 +157,7 @@ const Slider = () => {
 
         <button
           onClick={() => setCurrentSlide((prev) => (prev + 1) % slides.length)}
-          className="p-1.5 rounded-none bg-[#FAF9F6] dark:bg-[#181816] hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black text-black dark:text-white shrink-0 border border-black dark:border-white transition-colors cursor-pointer"
+          className="p-1.5 rounded-none bg-editorial-bg dark:bg-editorial-dark-card hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black text-editorial-text dark:text-editorial-dark-text shrink-0 border border-black dark:border-white transition-colors cursor-pointer"
         >
           <ChevronRight className="w-4 h-4" />
         </button>

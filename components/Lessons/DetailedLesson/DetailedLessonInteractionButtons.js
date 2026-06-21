@@ -106,7 +106,7 @@ const DetailedLessonInteractionButtons = ({ lesson, user }) => {
           className={`px-4 py-2 border-2 border-black text-[10px] font-black uppercase tracking-widest flex items-center gap-2 rounded-none transition-all cursor-pointer ${
             isLiked
               ? "bg-black text-white dark:bg-white dark:text-black"
-              : "bg-white dark:bg-[#121212] text-black dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              : "bg-editorial-card dark:bg-editorial-dark-card text-editorial-text dark:text-editorial-dark-text hover:bg-neutral-100 dark:hover:bg-neutral-800"
           }`}
         >
           <span className="w-3.5 h-3.5">{likeCount}</span>
@@ -122,7 +122,7 @@ const DetailedLessonInteractionButtons = ({ lesson, user }) => {
           className={`p-2.5 border-2 border-black rounded-none transition-all cursor-pointer ${
             isFavorite
               ? "bg-black text-white dark:bg-white dark:text-black"
-              : "bg-white dark:bg-[#121212] text-black dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              : "bg-editorial-card dark:bg-editorial-dark-card text-editorial-text dark:text-editorial-dark-text hover:bg-neutral-100 dark:hover:bg-neutral-800"
           }`}
           title="Bookmark lesson"
         >
@@ -151,7 +151,7 @@ const DetailedLessonInteractionButtons = ({ lesson, user }) => {
       {/* COMPLAINTS MODAL DISPLAY */}
       {showReportModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-40">
-          <div className="bg-white dark:bg-[#121212] border-4 border-black dark:border-white p-6 rounded-none max-w-sm w-full shadow-none space-y-4">
+          <div className="bg-editorial-bg dark:bg-editorial-dark-bg border-4 border-black dark:border-white p-6 rounded-none max-w-sm w-full shadow-none space-y-4">
             <div className="flex justify-between items-center border-b pb-2 border-black/10 dark:border-white/10">
               <h3 className="font-serif font-black text-rose-600 dark:text-rose-400 uppercase text-xs flex items-center gap-1.5 leading-none">
                 <AlertTriangle className="w-4 h-4 animate-pulse" />
@@ -179,7 +179,7 @@ const DetailedLessonInteractionButtons = ({ lesson, user }) => {
                 <select
                   value={reportReason}
                   onChange={(e) => setReportReason(e.target.value)}
-                  className="w-full border-2 border-black p-2.5 rounded-none bg-white dark:bg-[#121212] dark:text-white font-black uppercase text-[10px]"
+                  className="w-full border-2 border-black p-2.5 rounded-none bg-editorial-card dark:bg-editorial-dark-card dark:text-editorial-dark-text font-black uppercase text-[10px]"
                 >
                   <option value="Inappropriate content / Hate speech">
                     Inappropriate content / Hate speech

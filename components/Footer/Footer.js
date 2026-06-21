@@ -3,12 +3,12 @@ import React from "react";
 
 const FooterSection = () => {
   return (
-    <footer className="bg-[#FAF9F6] dark:bg-[#121212] border-t-2 border-black dark:border-white text-neutral-800 dark:text-neutral-300 py-16 px-4 sm:px-6 lg:px-8 mt-auto">
+    <footer className="bg-editorial-bg dark:bg-editorial-dark-bg border-t-2 border-black dark:border-white text-neutral-800 dark:text-neutral-300 py-16 px-4 sm:px-6 lg:px-8 mt-auto">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
         {/* Col 1 Brand */}
         <div className="space-y-4">
           <Link href="/" className="flex items-center gap-2 cursor-pointer">
-            <div className="text-xl font-black tracking-tighter uppercase italic px-3 py-1 border-2 border-black dark:border-white text-black dark:text-white bg-white dark:bg-transparent">
+            <div className="text-xl font-black tracking-tighter uppercase italic px-3 py-1 border-2 border-black dark:border-white text-editorial-text dark:text-editorial-dark-text bg-editorial-bg dark:bg-transparent">
               LIFELORE
             </div>
           </Link>

@@ -68,7 +68,7 @@ const DetailedLessonComments = ({ lesson, user, comments }) => {
                   ? "Write your respectful reflective response feedback..."
                   : "Register/sign in to join the conversation..."
               }
-              className="w-full border-2 border-black bg-[#FAF9F6] dark:bg-neutral-900 p-3 text-xs font-bold tracking-wider text-black dark:text-white focus:outline-none focus:border-black rounded-none placeholder:text-neutral-400"
+              className="w-full border-2 border-black bg-editorial-card dark:bg-editorial-dark-card p-3 text-xs font-bold tracking-wider text-editorial-text dark:text-editorial-dark-text focus:outline-none focus:border-black rounded-none placeholder:text-neutral-400"
               {...register("text", {
                 required: "Comment is required",
                 minLength: {
@@ -107,9 +107,9 @@ const DetailedLessonComments = ({ lesson, user, comments }) => {
             {localComment.map((comment) => (
               <div
                 key={comment._id}
-                className="p-4 rounded-none border-2 border-black dark:border-white bg-[#F9F7F2] dark:bg-editorial-dark-card/30 text-xs space-y-2 text-left relative group"
+                className="p-4 rounded-none border-2 border-black dark:border-white bg-editorial-card dark:bg-editorial-dark-card/30 text-xs space-y-2 text-left relative group"
               >
-                <div className="flex justify-between items-center border-b border-[#121212]/10 dark:border-white/10 pb-2">
+                <div className="flex justify-between items-center border-b border-black/10 dark:border-white/10 pb-2">
                   <div className="flex items-center gap-2">
                     <figure className="w-5 h-5 relative">
                       <Image

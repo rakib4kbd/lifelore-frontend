@@ -21,7 +21,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "@/lib/auth-client";
 
-const LIMIT = 2;
+const LIMIT = 6;
 
 const PublicLessonsPage = () => {
   const router = useRouter();
@@ -128,7 +128,7 @@ const PublicLessonsPage = () => {
   // UI
   // -------------------------
   return (
-    <div className="space-y-8 my-20 max-w-7xl mx-auto">
+    <div className="space-y-8 my-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* HEADER */}
       <div className="text-left max-w-4xl border-b-2 border-black dark:border-white pb-6 space-y-3">
         <h1 className="text-4xl sm:text-5xl font-serif font-black">
@@ -140,7 +140,7 @@ const PublicLessonsPage = () => {
       </div>
 
       {/* SEARCH + FILTERS */}
-      <div className="bg-[#F9F7F2] dark:bg-[#181816] border-2 border-black p-6 space-y-5">
+      <div className="bg-editorial-card dark:bg-editorial-dark-card border-2 border-black p-6 space-y-5">
         {/* SEARCH */}
         <form onSubmit={handleSubmit(onFormSubmit)} className="flex gap-3">
           <div className="relative flex-1">
@@ -154,11 +154,11 @@ const PublicLessonsPage = () => {
                 setValue("search", newValue);
               }}
               placeholder="Search lessons..."
-              className="w-full pl-10 py-3 border-2 border-black"
+              className="w-full pl-10 py-3 border-2 border-black dark:border-white bg-editorial-bg dark:bg-editorial-dark-bg text-black dark:text-white focus:outline-none rounded-none placeholder:text-neutral-400 text-xs font-bold uppercase tracking-wider"
             />
           </div>
 
-          <button className="px-6 border-2 border-black bg-black text-white">
+          <button className="px-6 py-3 border-2 border-black dark:border-white bg-black hover:bg-transparent text-white hover:text-black dark:bg-white dark:hover:bg-transparent dark:text-black dark:hover:text-white text-[11px] font-black uppercase tracking-widest transition-colors">
             Search
           </button>
         </form>
@@ -177,7 +177,7 @@ const PublicLessonsPage = () => {
                 setPage(1);
                 // Fetch will be triggered by useEffect when category state changes
               }}
-              className="border-2 border-black px-2 py-1"
+              className="border-2 border-black dark:border-white px-2 py-1 bg-editorial-bg dark:bg-editorial-dark-bg text-black dark:text-white focus:outline-none rounded-none"
             >
               <option value="">All Categories</option>
               {categoriesList.map((c) => (
@@ -200,7 +200,7 @@ const PublicLessonsPage = () => {
                 setPage(1);
                 // Fetch will be triggered by useEffect when tone state changes
               }}
-              className="border-2 border-black px-2 py-1"
+              className="border-2 border-black dark:border-white px-2 py-1 bg-editorial-bg dark:bg-editorial-dark-bg text-black dark:text-white focus:outline-none rounded-none"
             >
               <option value="">All Tones</option>
               {tonesList.map((t) => (
@@ -223,7 +223,7 @@ const PublicLessonsPage = () => {
                 setPage(1);
                 // Fetch will be triggered by useEffect when sort state changes
               }}
-              className="border-2 border-black px-2 py-1"
+              className="border-2 border-black dark:border-white px-2 py-1 bg-editorial-bg dark:bg-editorial-dark-bg text-black dark:text-white focus:outline-none rounded-none"
             >
               <option value="newest">Newest</option>
               <option value="most_saved">Most Saved</option>
@@ -243,7 +243,7 @@ const PublicLessonsPage = () => {
               setValue("tone", "");
               setValue("sort", "newest");
             }}
-            className="ml-auto underline"
+            className="ml-auto text-[11px] font-bold uppercase tracking-widest text-neutral-500 hover:text-black dark:hover:text-white underline transition-colors"
           >
             Reset
           </button>
@@ -251,7 +251,7 @@ const PublicLessonsPage = () => {
       </div>
 
       {/* INFO / STATUS */}
-      <div className="flex items-center justify-between text-xs font-bold uppercase border-b pb-2">
+      <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest border-b border-black/30 dark:border-white/30 pb-2 text-neutral-500 dark:text-neutral-400">
         <div>Total: {total}</div>
         <div>
           Showing page {page} of {totalPages}
@@ -259,7 +259,11 @@ const PublicLessonsPage = () => {
       </div>
 
       {/* LOADING */}
-      {loading && <p className="text-sm">Loading...</p>}
+      {loading && (
+        <div className="py-16 flex justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black dark:border-white" />
+        </div>
+      )}
 
       {/* GRID */}
 
@@ -275,11 +279,11 @@ const PublicLessonsPage = () => {
             <Link
               href={isBlurred ? "/pricing" : `/lessons/${lesson._id}`}
               key={idx}
-              className="group relative flex flex-col justify-between bg-white dark:bg-[#121212] border-2 border-black dark:border-white rounded-none overflow-hidden p-6 text-left hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] transition-all cursor-pointer"
+              className="group relative flex flex-col justify-between bg-editorial-bg dark:bg-editorial-dark-bg border-2 border-black dark:border-white rounded-none overflow-hidden p-6 text-left hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] transition-all cursor-pointer"
             >
               {/* BLURRED MOCKUP WITH LOCK ELEMENT */}
               {isBlurred && (
-                <div className="absolute inset-0 bg-[#FAF9F6]/95 dark:bg-[#181816]/95 backdrop-blur-[3px] z-10 flex flex-col items-center justify-center p-6 text-center">
+                <div className="absolute inset-0 bg-editorial-bg/95 dark:bg-editorial-dark-card/95 backdrop-blur-[3px] z-10 flex flex-col items-center justify-center p-6 text-center">
                   <div className="w-12 h-12 bg-black text-white dark:bg-white dark:text-black border-2 border-black flex items-center justify-center mb-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,0.15)]">
                     <Lock className="w-5 h-5 text-current animate-bounce" />
                   </div>
@@ -324,7 +328,7 @@ const PublicLessonsPage = () => {
                 </h3>
 
                 <div className="flex gap-2 items-center text-[9px] uppercase font-bold tracking-wider text-neutral-500">
-                  <span className="inline-block px-1.5 py-0.5 bg-[#FAF9F6] dark:bg-[#181816] border border-black/20">
+                  <span className="inline-block px-1.5 py-0.5 bg-editorial-bg dark:bg-editorial-dark-card border border-black/20">
                     RESONANCE: {lesson.emotionalTone}
                   </span>
                 </div>
@@ -391,21 +395,21 @@ const PublicLessonsPage = () => {
           <button
             disabled={page === 1}
             onClick={() => setPage((p) => Math.max(p - 1, 1))}
-            className="p-2 border-2 border-black bg-white disabled:opacity-50"
+            className="p-2 border-2 border-black dark:border-white bg-white dark:bg-editorial-dark-bg text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors disabled:opacity-50"
           >
-            <ChevronLeft />
+            <ChevronLeft className="w-4 h-4" />
           </button>
 
-          <span className="px-4 py-2 border-2 border-black bg-white">
+          <span className="px-4 py-2 border-2 border-black dark:border-white bg-editorial-card dark:bg-editorial-dark-card text-black dark:text-white text-[11px] font-black uppercase tracking-widest">
             PAGE {page} OF {totalPages}
           </span>
 
           <button
             disabled={page === totalPages}
             onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
-            className="p-2 border-2 border-black bg-white disabled:opacity-50"
+            className="p-2 border-2 border-black dark:border-white bg-white dark:bg-editorial-dark-bg text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors disabled:opacity-50"
           >
-            <ChevronRight />
+            <ChevronRight className="w-4 h-4" />
           </button>
         </div>
       )}

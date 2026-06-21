@@ -49,12 +49,12 @@ const FeaturedLifeLessons = async ({ user }) => {
                 <Link
                   href={isBlurred ? "/pricing" : `lessons/${lesson._id}`}
                   key={idx}
-                  className="group relative flex justify-between bg-white dark:bg-[#121212] border-2 border-black dark:border-white rounded-none overflow-hidden p-6 text-left hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] transition-all cursor-pointer"
+                  className="group relative flex justify-between bg-editorial-bg dark:bg-editorial-dark-bg border-2 border-black dark:border-white rounded-none overflow-hidden p-6 text-left hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] transition-all cursor-pointer"
                 >
                   {/* BLURRED MOCKUP WITH LOCK ELEMENT */}
                   {isBlurred && (
-                    <div className="absolute inset-0 bg-[#FAF9F6]/95 dark:bg-[#181816]/95 backdrop-blur-[3px] z-10 flex flex-col items-center justify-center p-6 text-center">
-                      <div className="w-12 h-12 bg-black text-white dark:bg-white dark:text-black border-2 border-black flex items-center justify-center mb-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,0.15)]">
+                    <div className="absolute inset-0 bg-editorial-bg/95 dark:bg-editorial-dark-card/95 backdrop-blur-[3px] z-10 flex flex-col items-center justify-center p-6 text-center">
+                      <div className="w-12 h-12 bg-black text-white dark:bg-editorial-dark-card dark:text-editorial-dark-text border-2 border-black flex items-center justify-center mb-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,0.15)]">
                         <Lock className="w-5 h-5 text-current animate-bounce" />
                       </div>
                       <p className="font-serif font-black text-lg text-black dark:text-white">
@@ -97,7 +97,7 @@ const FeaturedLifeLessons = async ({ user }) => {
 
                       {/* Categorized and toned labels */}
                       <div className="flex gap-2 items-center text-[9px] uppercase font-bold tracking-wider text-neutral-500">
-                        <span className="inline-block px-1.5 py-0.5 bg-[#FAF9F6] dark:bg-[#181816] border border-black/20">
+                        <span className="inline-block px-1.5 py-0.5 bg-editorial-bg dark:bg-editorial-dark-card border border-black/20">
                           RESONANCE: {lesson.emotionalTone}
                         </span>
                       </div>

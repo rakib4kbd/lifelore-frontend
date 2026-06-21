@@ -37,7 +37,7 @@ const WhyChooseLifelore = () => {
   return (
     <>
       {/* 2. WHY LEARNING FROM LIFE MATTERS (STATIC ANIMATED BENEFITS) */}
-      <section className="space-y-8 my-20">
+      <section className="space-y-8">
         <div className="text-left border-b-2 border-black dark:border-white/50 pb-4 max-w-3xl">
           <h2 className="text-3xl sm:text-4xl font-black text-black dark:text-white font-serif">
             The Philosophy of Preserved Wisdom

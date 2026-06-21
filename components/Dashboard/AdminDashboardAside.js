@@ -14,7 +14,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const AdminDashboardAside = ({ user }) => {
-  console.log(user);
   const adminDashboardNavigation = [
     {
       label: "System Overview",
@@ -50,9 +49,7 @@ const AdminDashboardAside = ({ user }) => {
 
   const pathname = usePathname();
   return (
-    <div className="min-h-150 flex flex-col md:flex-row gap-6 pb-16 pt-2 text-left">
-      {/* ADMIN LEVEL SIDEBAR */}
-      <aside className="w-full md:w-64 shrink-0 space-y-4">
+    <aside className="w-full md:w-64 shrink-0 space-y-4 pb-8 pt-2 text-left">
         <div className="p-4 bg-black text-white dark:bg-white dark:text-black rounded-none border-2 border-black flex items-center gap-3 shadow-none">
           <div className="w-10 h-10 rounded-full bg-[#FAF9F6] border border-black text-black flex items-center justify-center font-bold shrink-0">
             <ShieldCheck className="w-5 h-5" />
@@ -93,8 +90,7 @@ const AdminDashboardAside = ({ user }) => {
             </Link>
           );
         })}
-      </aside>
-    </div>
+    </aside>
   );
 };
 
