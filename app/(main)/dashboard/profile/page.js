@@ -29,10 +29,11 @@ const DashboardSettings = async () => {
     },
     {
       label: "Recently Added Lessons",
-      value: recentlyCreatedLessons.length || 1,
+      value: recentlyCreatedLessons.length || 0,
       subtitle: "Mindful habits",
       color: "bg-amber-500/10 dark:bg-amber-950/20",
     },
+    { recentlyCreatedLessons: recentlyCreatedLessons },
   ];
   return (
     <div>

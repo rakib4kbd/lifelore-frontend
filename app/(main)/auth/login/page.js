@@ -6,8 +6,9 @@ import { ArrowRight, Lock, UserIcon, Sparkles, Mail } from "lucide-react";
 import { ShieldCheck } from "lucide-react";
 import { Camera } from "lucide-react";
 import { authClient, signIn, signUp } from "@/lib/auth-client";
-import showToast from "@/lib/showAlertToast";
 import { useRouter } from "next/navigation";
+import showAlertToast from "@/lib/showAlertToast";
+import showSuccessToast from "@/lib/showSuccessToast";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -26,13 +27,13 @@ const LoginPage = () => {
       name: "Global Admin",
       email: "admin@gmail.com",
       pass: "Admin123!",
-      role: "ADMIN CONSOL ⭐",
+      role: "ADMIN CONSOLE",
     },
     {
       name: "Premium Member",
       email: "premium@gmail.com",
       pass: "Premium123!",
-      role: "PREMIUM MEMBER ⭐",
+      role: "PREMIUM MEMBER",
     },
     {
       name: "Free Tier Blogger",
@@ -86,8 +87,6 @@ const LoginPage = () => {
     const { name, email, password, photoURL } = formData;
 
     if (mode === "login") {
-      // login logic
-      // await signIn(data.email, data.password)
       const { data, error } = await signIn.email({
         email: email,
         password: password,
@@ -96,7 +95,7 @@ const LoginPage = () => {
       if (error) {
         showAlertToast(error.message);
       } else {
-        showAlertToast("Login successful!");
+        showSuccessToast("Login successful!");
       }
     } else {
       const { data, error } = await signUp.email({
@@ -109,7 +108,7 @@ const LoginPage = () => {
       if (error) {
         showAlertToast(error.message);
       } else {
-        showAlertToast("Registration successful!");
+        showSuccessToast("Registration successful!");
       }
     }
 

@@ -15,7 +15,7 @@ export async function POST() {
       line_items: [
         {
           // Provide the exact Price ID (for example, price_1234) of the product you want to sell
-          price: "price_1TjdqqITWEOtidLBsTQOOVj1",
+          price: "price_1TkvzxITWEOtidLBVaMVmDrj",
           quantity: 1,
         },
       ],
@@ -24,7 +24,7 @@ export async function POST() {
         userId: user.id,
       },
       success_url: `${origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/payment/cancel`,
+      cancel_url: `${origin}/payment/canceled?session_id={CHECKOUT_SESSION_ID}`,
     });
     return NextResponse.redirect(session.url, 303);
   } catch (err) {

@@ -1,94 +1,81 @@
 import fetchUserSession from "@/lib/fetchUserSession";
-import { Settings } from "lucide-react";
-import React from "react";
+import { Settings, Shield } from "lucide-react";
+import Image from "next/image";
 
 const AdminProfilePage = async () => {
   const user = await fetchUserSession();
-  const loading = false;
+
   return (
-    <div className="space-y-6 text-left">
-      <div>
-        <h2 className="text-xl font-bold text-slate-850 dark:text-white flex items-center gap-1.5">
-          <Settings className="w-5 h-5 text-indigo-500" />
+    <div className="space-y-6 p-4 sm:p-6 text-left">
+      <div className="border-b-2 border-black dark:border-white pb-4">
+        <h2 className="text-xl font-serif font-black text-black dark:text-white flex items-center gap-1.5 uppercase tracking-widest">
+          <Settings className="w-5 h-5" />
           Admin Moderator Specifications
         </h2>
-        <p className="text-xs text-slate-500">
-          Edit display name, photoroll URLs, and check active moderation
-          counters.
+        <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 font-sans">
+          Edit display name, photoroll URLs, and check active moderation counters.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pt-2">
-        {/* FORM */}
-        <form
-          //   onSubmit={handleUpdate}
-          className="md:col-span-7 space-y-4 text-xs"
-        >
-          <div className="space-y-1">
-            <label className="font-semibold text-slate-550">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <form className="md:col-span-7 space-y-4 border-2 border-black dark:border-white bg-editorial-bg dark:bg-editorial-dark-bg p-6">
+          <div className="space-y-1.5">
+            <label className="block text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400">
               Account Email Address (Static)
             </label>
             <input
               type="email"
               disabled
-              className="w-full border p-2.5 bg-slate-100 rounded-lg"
+              defaultValue={user?.email}
+              className="w-full border-2 border-black/30 dark:border-white/30 bg-editorial-card dark:bg-editorial-dark-card px-4 py-3 text-sm text-neutral-400 outline-none rounded-none opacity-60"
             />
           </div>
 
-          <div className="space-y-1">
-            <label className="font-semibold text-slate-550">
+          <div className="space-y-1.5">
+            <label className="block text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400">
               Moderator Display Name
             </label>
             <input
               type="text"
-              required
-              //   onChange={(e) => setName(e.target.value)}
-              className="w-full border p-2.5 rounded-lg text-sm"
+              defaultValue={user?.name}
+              className="w-full border-2 border-black dark:border-white bg-editorial-card dark:bg-editorial-dark-card px-4 py-3 text-sm text-black dark:text-white outline-none rounded-none"
             />
           </div>
 
-          <div className="space-y-1">
-            <label className="font-semibold text-slate-550">
+          <div className="space-y-1.5">
+            <label className="block text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400">
               Profile Photo URL
             </label>
             <input
               type="url"
-              required
-              //   onChange={(e) => setPhotoURL(e.target.value)}
-              className="w-full border p-2.5 rounded-lg text-sm font-mono text-[11px]"
+              defaultValue={user?.image}
+              className="w-full border-2 border-black dark:border-white bg-editorial-card dark:bg-editorial-dark-card px-4 py-3 text-sm font-mono text-[11px] text-black dark:text-white outline-none rounded-none placeholder:text-neutral-400"
             />
           </div>
 
           <button
             type="submit"
-            disabled={loading}
-            className="px-5 py-2.5 bg-slate-900 text-white rounded-lg font-bold"
+            className="w-full border-2 border-black dark:border-white bg-black hover:bg-transparent text-white hover:text-black dark:bg-white dark:hover:bg-transparent dark:text-black dark:hover:text-white px-5 py-3 text-[11px] font-black uppercase tracking-widest rounded-none transition-colors"
           >
-            {loading ? "Saving configs..." : "Save Admin specifications"}
+            Save Admin Specifications
           </button>
         </form>
 
-        {/* DETAILS PANEL PREVIEW */}
-        <div className="md:col-span-5 p-6 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 text-center flex flex-col items-center justify-center space-y-4">
-          <img
-            src={
-              user?.photoURL ||
-              "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
-            }
-            alt="Admin"
-            className="w-20 h-20 rounded-full object-cover border-4 border-amber-500/20"
-          />
-          <div>
-            <h3 className="font-bold text-sm text-slate-800 dark:text-slate-100">
-              {user?.name}
-            </h3>
-            <span className="text-[10px] text-slate-400 font-mono">
-              {user?.email}
-            </span>
+        <div className="md:col-span-5 border-2 border-black dark:border-white bg-editorial-card dark:bg-editorial-dark-card p-6 flex flex-col items-center justify-center text-center space-y-4">
+          <div className="relative w-20 h-20 rounded-full border-2 border-black dark:border-white overflow-hidden">
+            <Image
+              src={user?.image || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"}
+              alt="Admin"
+              fill
+              className="object-cover"
+            />
           </div>
-
-          <span className="px-3 py-1 bg-amber-500/15 text-amber-600 dark:text-amber-400 text-xs font-bold border border-amber-500/25 rounded-md">
-            🛡️ LEVEL 1 SYSTEM CONCIERGE
+          <div>
+            <h3 className="font-serif font-black text-black dark:text-white">{user?.name}</h3>
+            <span className="text-[10px] font-mono text-neutral-500 dark:text-neutral-400">{user?.email}</span>
+          </div>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-black text-white dark:bg-white dark:text-black border border-black dark:border-white text-[9px] font-black uppercase tracking-widest">
+            <Shield className="w-3 h-3" /> Level 1 System Concierge
           </span>
         </div>
       </div>

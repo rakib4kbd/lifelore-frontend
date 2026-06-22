@@ -2,15 +2,20 @@ import {
   fetchMostFavouriteLessons,
   fetchUsersWithLessonCount,
 } from "@/lib/fetchData";
+import fetchUserSession from "@/lib/fetchUserSession";
 import { Users } from "lucide-react";
 import { Users2 } from "lucide-react";
+import { Lock } from "lucide-react";
+import { Award } from "lucide-react";
 import { Zap } from "lucide-react";
 import { Bookmark } from "lucide-react";
 import { TrendingUp } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const MostSavedLessonSection = async () => {
+  const user = await fetchUserSession();
   const loading = false;
   const topSaves = await fetchMostFavouriteLessons();
   const contributors = await fetchUsersWithLessonCount();
@@ -19,9 +24,9 @@ const MostSavedLessonSection = async () => {
       {/* SECTION 4A: MOST SAVED LESSONS PORTFOLIO (7 Columns) */}
       <div className="lg:col-span-8 space-y-6">
         <div className="text-left space-y-1 border-b-2 border-black dark:border-white pb-3">
-          <h2 className="text-3xl sm:text-4xl font-black text-black dark:text-white font-serif flex items-center gap-1.5">
+          <h2 className="text-2xl sm:text-3xl font-black text-black dark:text-white font-serif flex flex-wrap items-center gap-1.5">
             Most Saved Lessons Registry
-            <TrendingUp className="w-5 h-5 text-black dark:text-white" />
+            <TrendingUp className="w-5 h-5 text-black dark:text-white shrink-0" />
           </h2>
           <p className="text-neutral-500 dark:text-neutral-400 text-xs font-sans">
             Critical life realizations and frameworks stored by global members
@@ -35,44 +40,69 @@ const MostSavedLessonSection = async () => {
           </div>
         ) : (
           <div className="space-y-4">
-            {topSaves.map((lesson) => (
-              <div
-                key={lesson._id}
-                // onClick={() => navigateTo("lesson-details", { id: lesson.id })}
-                className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 bg-editorial-bg dark:bg-editorial-dark-bg border-2 border-black dark:border-white/70 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] cursor-pointer transition-all gap-4 text-left rounded-none"
-              >
-                <div className="space-y-2 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="px-1.5 py-0.5 rounded-none bg-black text-white dark:bg-white dark:text-black text-[9px] font-black tracking-widest uppercase font-mono border border-black">
-                      {lesson.category}
-                    </span>
-                    <span className="text-[10px] uppercase font-bold tracking-wider text-neutral-500 dark:text-neutral-400">
-                      {lesson.emotionalTone} Resonance
-                    </span>
-                  </div>
-                  <h4 className="text-lg font-bold font-serif text-black dark:text-white line-clamp-1 group-hover:underline">
-                    {lesson.title}
-                  </h4>
-                  <p className="text-neutral-650 dark:text-neutral-400 text-xs font-serif italic line-clamp-1 max-w-lg">
-                    &quot;{lesson.description}&quot;
-                  </p>
-                </div>
+            {topSaves.map((lesson) => {
+              const isPremium = lesson.accessLevel === "Premium";
+              const isViewerPremium = user?.isPremium || user?.role === "admin";
+              const isCreator = user?.id === lesson.creatorId;
+              const isBlurred = isPremium && !isViewerPremium && !isCreator;
+              return (
+                <Link
+                  key={lesson._id}
+                  href={isBlurred ? "/pricing" : `/lessons/${lesson._id}`}
+                  className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 bg-editorial-bg dark:bg-editorial-dark-bg border-2 border-black dark:border-white/70 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] cursor-pointer transition-all gap-4 text-left rounded-none relative"
+                >
+                  {isBlurred && (
+                    <div className="absolute inset-0 bg-editorial-bg/95 dark:bg-editorial-dark-card/95 backdrop-blur-[3px] z-10 flex items-center justify-between p-6 text-center">
+                      <div className="w-12 h-12 bg-black text-white dark:bg-white dark:text-black border-2 border-black flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,0.15)]">
+                        <Lock className="w-5 h-5 text-current" />
+                      </div>
 
-                <div className="flex items-center justify-between w-full sm:w-auto shrink-0 gap-4 border-t sm:border-t-0 border-black/10 dark:border-white/10 pt-3 sm:pt-0">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 truncate max-w-20">
-                      {lesson.creatorName}
-                    </span>
+                      <p className="font-serif font-black text-lg text-black dark:text-white">
+                        Premium Lesson Locked
+                      </p>
+
+                      <button className="px-3 py-2 border-2 border-black dark:border-white bg-black hover:bg-transparent text-white hover:text-black dark:bg-white dark:hover:bg-transparent dark:text-black dark:hover:text-white text-[10px] uppercase font-black tracking-widest rounded-none transition-colors cursor-pointer flex items-center gap-1">
+                        <span>
+                          <Award className="w-5 h-5" />
+                        </span>
+                        Unlock with Premium
+                      </button>
+                    </div>
+                  )}
+
+                  <div className="space-y-2 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="px-1.5 py-0.5 rounded-none bg-black text-white dark:bg-white dark:text-black text-[9px] font-black tracking-widest uppercase font-mono border border-black">
+                        {lesson.category}
+                      </span>
+                      <span className="text-[10px] uppercase font-bold tracking-wider text-neutral-500 dark:text-neutral-400">
+                        {lesson.emotionalTone} Resonance
+                      </span>
+                    </div>
+                    <h4 className="text-lg font-bold font-serif text-black dark:text-white line-clamp-1 group-hover:underline">
+                      {lesson.title}
+                    </h4>
+                    <p className="text-neutral-650 dark:text-neutral-400 text-xs font-serif italic line-clamp-1 max-w-lg">
+                      &quot;{lesson.description}&quot;
+                    </p>
                   </div>
 
-                  <div className="inline-flex items-center gap-1 px-2.5 py-1 bg-editorial-card dark:bg-editorial-dark-card text-black dark:text-white text-[9px] font-black uppercase tracking-widest rounded-none border border-black dark:border-white">
-                    <Bookmark className="w-3 h-3 text-neutral-700 dark:text-neutral-300 fill-neutral-700/20" />
-                    {lesson.favouritesCount}{" "}
-                    {lesson.favouritesCount === 1 ? "Save" : "Saves"}
+                  <div className="flex items-center justify-between w-full sm:w-auto shrink-0 gap-4 border-t sm:border-t-0 border-black/10 dark:border-white/10 pt-3 sm:pt-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 truncate max-w-20">
+                        {lesson.creatorName}
+                      </span>
+                    </div>
+
+                    <div className="inline-flex items-center gap-1 px-2.5 py-1 bg-editorial-card dark:bg-editorial-dark-card text-black dark:text-white text-[9px] font-black uppercase tracking-widest rounded-none border border-black dark:border-white">
+                      <Bookmark className="w-3 h-3 text-neutral-700 dark:text-neutral-300 fill-neutral-700/20" />
+                      {lesson.favouritesCount}{" "}
+                      {lesson.favouritesCount === 1 ? "Save" : "Saves"}
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         )}
       </div>
@@ -80,8 +110,8 @@ const MostSavedLessonSection = async () => {
       {/* SECTION 4B: TOP CONTRIBUTORS OF THE WEEK (4 Columns) */}
       <div className="lg:col-span-4 space-y-6">
         <div className="text-left space-y-1 border-b-2 border-black dark:border-white pb-3">
-          <h2 className="text-3xl sm:text-4xl font-black text-black dark:text-white font-serif flex items-center gap-1.5">
-            <Users2 className="w-5 h-5 text-black dark:text-white" />
+          <h2 className="text-2xl sm:text-3xl font-black text-black dark:text-white font-serif flex flex-wrap items-center gap-1.5">
+            <Users2 className="w-5 h-5 text-black dark:text-white shrink-0" />
             Sages Rank List
           </h2>
           <p className="text-neutral-500 dark:text-neutral-400 text-xs font-sans">
@@ -95,9 +125,10 @@ const MostSavedLessonSection = async () => {
             .map((contrib, idx) => (
               <div
                 key={contrib.email}
-                className="flex items-center justify-between p-3 bg-white dark:bg-editorial-dark-bg border border-black dark:border-white/50 rounded-none hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.7)] transition-all"
+                className="flex items-center justify-between p-3 bg-white dark:bg-editorial-dark-bg border border-black dark:border-white/50 rounded-none hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.7)] transition-all relative"
               >
-                <div className="flex items-center gap-3">
+                {/* Left section */}
+                <div className="flex items-center gap-3 flex-1 min-w-0 lg:mb-1.5">
                   <div className="relative shrink-0">
                     <figure className="relative w-10 h-10">
                       <Image
@@ -110,25 +141,31 @@ const MostSavedLessonSection = async () => {
                         className="rounded-full border border-black dark:border-white object-cover"
                       />
                     </figure>
+
                     <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-none bg-black text-white text-[9px] font-black flex items-center justify-center border border-black">
                       {idx + 1}
                     </div>
                   </div>
-                  <div className="text-left">
-                    <p className="text-xs font-black uppercase tracking-wider text-neutral-800 dark:text-neutral-200 truncate max-w-[125px]">
+
+                  <div className="text-left min-w-0 flex-1">
+                    <p className="truncate text-xs font-black uppercase tracking-wider text-neutral-800 dark:text-neutral-200">
                       {contrib.name}
                     </p>
-                    <p className="text-[10px] font-mono text-neutral-500 dark:text-neutral-400 truncate max-w-[125px]">
+
+                    <p className="truncate text-[10px] font-mono text-neutral-500 dark:text-neutral-400">
                       {contrib.email}
                     </p>
                   </div>
                 </div>
 
-                <div className="text-right">
-                  <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-black text-white dark:bg-white dark:text-black border border-black font-mono text-[9px] font-black uppercase tracking-widest">
-                    <Zap className="w-3 h-3" />
-                    {contrib.totalLessons}{" "}
-                    {contrib.totalLessons === 1 ? "Lesson" : "Lessons"}
+                {/* Right section */}
+                <div className="lg:absolute lg:bottom-0 lg:right-0">
+                  <span className="flex items-center gap-1 px-2.5 py-1 bg-black text-white dark:bg-white dark:text-black border border-black font-mono text-[9px] font-black uppercase tracking-widest whitespace-nowrap">
+                    <Zap className="w-3 h-3 shrink-0" />
+                    <span>
+                      {contrib.totalLessons}{" "}
+                      {contrib.totalLessons === 1 ? "Lesson" : "Lessons"}
+                    </span>
                   </span>
                 </div>
               </div>

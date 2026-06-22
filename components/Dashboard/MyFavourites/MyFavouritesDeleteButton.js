@@ -2,24 +2,24 @@
 import showAlertToast from "@/lib/showAlertToast";
 import showSuccessToast from "@/lib/showSuccessToast";
 import { useRouter } from "next/navigation";
-import React from "react";
+import { useState } from "react";
 
 const MyFavouritesDeleteButton = ({ userId, lessonId }) => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const handleRemove = async () => {
+    setLoading(true);
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/favourite/`,
       {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, lessonId }),
       },
     );
-    if (!res.ok) {
-      showAlertToast("Failed to remove from favourites");
-    } else {
+    setLoading(false);
+    if (!res.ok) showAlertToast("Failed to remove from favourites");
+    else {
       showSuccessToast("Lesson removed from favourites");
       router.refresh();
     }
@@ -28,9 +28,9 @@ const MyFavouritesDeleteButton = ({ userId, lessonId }) => {
   return (
     <button
       onClick={handleRemove}
-      className="rounded-none border border-zinc-800 px-3 py-1.5 text-[11px] font-medium text-zinc-400 transition hover:bg-zinc-900 hover:text-zinc-100"
+      className="border-2 border-black dark:border-white px-3 py-1.5 text-[11px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 hover:bg-red-600 hover:text-white hover:border-red-600 transition-all rounded-none"
     >
-      Remove
+      {loading ? "Removing..." : "Remove"}
     </button>
   );
 };

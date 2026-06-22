@@ -1,6 +1,7 @@
 import UpgradeButton from "@/components/PricingPage/UpgradeButton/UpgradeButton";
 import { auth } from "@/lib/auth";
 import { Award } from "lucide-react";
+import { Star } from "lucide-react";
 import { CreditCard } from "lucide-react";
 import { Layers } from "lucide-react";
 import { headers } from "next/headers";
@@ -60,7 +61,7 @@ const PricingPage = async () => {
     },
   ];
   return (
-    <div className="space-y-12 my-20 max-w-4xl mx-auto">
+    <div className="space-y-12 my-12 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* SECTION HEADER */}
       <div className="text-center space-y-4 max-w-2xl mx-auto">
         <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-black text-white dark:bg-white dark:text-black border border-black dark:border-white">
@@ -133,8 +134,8 @@ const PricingPage = async () => {
               <p className="text-[10px] font-black text-amber-700 dark:text-amber-400 uppercase tracking-widest">
                 HIGHEST CONTRIBUTION PLAN
               </p>
-              <h3 className="text-3xl font-serif font-black text-black dark:text-white">
-                Premium Scribe ⭐
+              <h3 className="text-3xl font-serif font-black text-black dark:text-white flex items-center gap-2">
+                Premium <Star strokeWidth={2} />
               </h3>
             </div>
 

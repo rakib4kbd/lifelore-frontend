@@ -1,10 +1,14 @@
 import Link from "next/link";
 import React from "react";
+import x from "@/public/x.svg";
+import facebook from "@/public/facebook.svg";
+import linkedin from "@/public/linkedin.svg";
+import Image from "next/image";
 
 const FooterSection = () => {
   return (
     <footer className="bg-editorial-bg dark:bg-editorial-dark-bg border-t-2 border-black dark:border-white text-neutral-800 dark:text-neutral-300 py-16 px-4 sm:px-6 lg:px-8 mt-auto">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
         {/* Col 1 Brand */}
         <div className="space-y-4">
           <Link href="/" className="flex items-center gap-2 cursor-pointer">
@@ -122,7 +126,7 @@ const FooterSection = () => {
               rel="noreferrer"
               className="hover:underline"
             >
-              FACEBOOK
+              <Image src={facebook} alt="Facebook" className="w-10 h-10" />
             </Link>
             <Link
               href="https://x.com"
@@ -130,7 +134,7 @@ const FooterSection = () => {
               rel="noreferrer"
               className="hover:underline"
             >
-              X.COM
+              <Image src={x} alt="X" className="w-10 h-10" />
             </Link>
             <Link
               href="https://linkedin.com"
@@ -138,7 +142,7 @@ const FooterSection = () => {
               rel="noreferrer"
               className="hover:underline"
             >
-              LINKEDIN
+              <Image src={linkedin} alt="LinkedIn" className="w-10 h-10" />
             </Link>
           </div>
         </div>

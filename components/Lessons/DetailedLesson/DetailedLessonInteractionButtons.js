@@ -3,8 +3,6 @@
 import showSuccessToast from "@/lib/showSuccessToast";
 import { Heart } from "lucide-react";
 import { X } from "lucide-react";
-import { Send } from "lucide-react";
-import { MessageCircle } from "lucide-react";
 import { ThumbsUp } from "lucide-react";
 import { Share2 } from "lucide-react";
 import { AlertTriangle } from "lucide-react";
@@ -17,6 +15,7 @@ const DetailedLessonInteractionButtons = ({ lesson, user }) => {
   const [isLiked, setIsLiked] = useState(lesson.likes?.includes(user?.id));
   const [likeCount, setLikeCount] = useState(lesson.likesCount || 0);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [submittingReport, setSubmittingReport] = useState(false);
 
   const [reportReason, setReportReason] = useState(
     "Inappropriate content / Hate speech",
@@ -44,6 +43,7 @@ const DetailedLessonInteractionButtons = ({ lesson, user }) => {
     e.preventDefault();
 
     try {
+      setSubmittingReport(true);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/report`,
         {
@@ -67,6 +67,8 @@ const DetailedLessonInteractionButtons = ({ lesson, user }) => {
       }
     } catch (e) {
       console.error(e);
+    } finally {
+      setSubmittingReport(false);
     }
   };
 
@@ -208,7 +210,7 @@ const DetailedLessonInteractionButtons = ({ lesson, user }) => {
                   type="submit"
                   className="px-4 py-2 bg-rose-600 text-white font-black uppercase tracking-widest text-[9px] border border-black"
                 >
-                  File Complaint
+                  {submittingReport ? "Submitting ..." : "File Complaint"}
                 </button>
               </div>
             </form>

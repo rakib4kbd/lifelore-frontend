@@ -1,6 +1,6 @@
 "use client";
 
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { MessageCircle, Send } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Trash2 } from "lucide-react";
@@ -13,6 +13,7 @@ const DetailedLessonComments = ({ lesson, user, comments }) => {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
@@ -49,6 +50,25 @@ const DetailedLessonComments = ({ lesson, user, comments }) => {
     }
   };
 
+  const text = watch("text");
+
+  const handleDeleteComment = async (commentId) => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/comments/${commentId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    if (res.ok) {
+      setLocalComment((prev) =>
+        prev.filter((comment) => comment._id !== commentId),
+      );
+    }
+  };
+
   return (
     <div>
       <div className="space-y-6 pt-4">
@@ -58,7 +78,10 @@ const DetailedLessonComments = ({ lesson, user, comments }) => {
         </h3>
 
         {/* Comment Form */}
-        <form onSubmit={handleSubmit(onSubmit)} className="flex gap-3">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col sm:flex-row gap-3"
+        >
           <div className="flex-1">
             <input
               type="text"
@@ -90,7 +113,7 @@ const DetailedLessonComments = ({ lesson, user, comments }) => {
           <button
             type="submit"
             disabled={!user || isSubmitting}
-            className="px-6 py-3 border-2 border-black dark:border-white bg-black hover:bg-white text-white hover:text-black dark:bg-white dark:hover:bg-transparent dark:text-black dark:hover:text-white text-xs font-black uppercase tracking-widest rounded-none transition-colors cursor-pointer shrink-0 disabled:opacity-50"
+            className="px-6 py-3 border-2 border-black dark:border-white bg-black hover:bg-white text-white hover:text-black dark:bg-white dark:hover:bg-transparent dark:text-black dark:hover:text-white text-xs font-black uppercase tracking-widest rounded-none transition-colors cursor-pointer shrink-0 disabled:opacity-50 flex gap-2 items-center"
           >
             <span>{isSubmitting ? "SENDING..." : "SEND"}</span>
             <Send className="w-3.5 h-3.5" />
@@ -100,7 +123,8 @@ const DetailedLessonComments = ({ lesson, user, comments }) => {
         {/* Comments */}
         {localComment.length === 0 ? (
           <p className="text-xs text-neutral-450 italic text-center py-6 border border-dashed border-black/30 dark:border-white/30 font-serif">
-            "No reflective feedback recorded yet. Be the first contributor."
+            &quot;No reflective feedback recorded yet. Be the first
+            contributor.&quot;
           </p>
         ) : (
           <div className="space-y-4">
@@ -133,7 +157,10 @@ const DetailedLessonComments = ({ lesson, user, comments }) => {
                   {/* Delete own comment button */}
                   {(user?.id === comment.userId || user?.role === "admin") && (
                     <button
-                      onClick={() => handleDeleteComment(comment.id)}
+                      onClick={() => {
+                        console.log(comment._id);
+                        handleDeleteComment(comment._id);
+                      }}
                       className="p-1 rounded text-neutral-400 hover:text-rose-600 transition-colors opacity-100"
                       title="Deport comment"
                     >
@@ -143,7 +170,7 @@ const DetailedLessonComments = ({ lesson, user, comments }) => {
                 </div>
 
                 <p className="text-neutral-700 dark:text-neutral-300 font-serif text-sm leading-relaxed whitespace-pre-wrap pl-2 italic">
-                  "{comment.text}"
+                  &quot;{comment.text}&quot;
                 </p>
               </div>
             ))}

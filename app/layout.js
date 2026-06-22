@@ -1,8 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar/Navbar";
-import FooterSection from "@/components/Footer/Footer";
-import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,7 +22,7 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       data-theme="dark"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark no-scrollbar`}
     >
       <body className="">
         <div className="min-h-screen flex flex-col bg-editorial-bg text-editorial-text dark:bg-editorial-dark-bg dark:text-editorial-dark-text transition-colors duration-300 font-sans selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black">

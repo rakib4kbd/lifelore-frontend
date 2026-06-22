@@ -58,7 +58,7 @@ const Slider = () => {
 
   return (
     <section className="relative overflow-hidden bg-editorial-bg dark:bg-editorial-dark-bg p-8 sm:p-12 border-2 border-black dark:border-white/50 rounded-none shadow-none">
-      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[420px]">
+      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[320px] sm:min-h-[420px]">
         {/* Slide Text Content */}
         <div className="lg:col-span-7 flex flex-col justify-center text-left space-y-6">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-black text-white dark:bg-white dark:text-black border border-black dark:border-white w-max">
@@ -129,7 +129,7 @@ const Slider = () => {
       </div>
 
       {/* Carousel Indicators / Nav */}
-      <div className="absolute bottom-4 right-6 sm:right-12 z-20 flex items-center gap-2">
+      <div className="relative mt-6 lg:absolute lg:bottom-4 lg:right-6 z-20 flex items-center justify-end gap-2">
         <button
           onClick={() =>
             setCurrentSlide(

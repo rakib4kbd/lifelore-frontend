@@ -21,7 +21,7 @@ const UpgradeButton = ({ user }) => {
               className="w-full text-center py-3.5 border-2 border-black dark:border-white bg-black hover:bg-white text-white hover:text-black dark:bg-white dark:hover:bg-transparent dark:text-black dark:hover:text-white text-[11px] font-black uppercase tracking-widest rounded-none transition-colors cursor-pointer flex items-center justify-center gap-2"
             >
               <CreditCard className="w-4 h-4" />
-              UPGRADE TO SCRIBE (100% ONLINE)
+              Upgrade to Premium
             </button>
           </section>
         </form>

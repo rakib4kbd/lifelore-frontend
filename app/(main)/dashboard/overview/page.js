@@ -1,113 +1,64 @@
 import ChartOverview from "@/components/Dashboard/ChartOverview";
 import { auth } from "@/lib/auth";
-import {
-  fetchFavouriteLessonsByUserId,
-  fetchLessonCountByCreatorId,
-  fetchLessonsByCreatorId,
-} from "@/lib/fetchData";
+import { fetchFavouriteLessonsByUserId, fetchLessonCountByCreatorId, fetchLessonsByCreatorId } from "@/lib/fetchData";
 import { headers } from "next/headers";
 import Link from "next/link";
-import React from "react";
 
 const DashboardOverview = async () => {
-  const { user } =
-    (await auth.api.getSession({ headers: await headers() })) || {};
+  const { user } = (await auth.api.getSession({ headers: await headers() })) || {};
   const totalLessonsCreated = await fetchLessonCountByCreatorId(user?.id);
   const savedLessons = await fetchFavouriteLessonsByUserId(user?.id);
   const recentlyCreatedLessons = await fetchLessonsByCreatorId(user?.id);
 
   const stats = [
-    {
-      label: "My Archive Total",
-      value: totalLessonsCreated.count || 0,
-      subtitle: "Written lessons",
-      color: "bg-indigo-500/10 dark:bg-indigo-950/20",
-    },
-    {
-      label: "Favorites Library",
-      value: savedLessons.length || 0,
-      subtitle: "Saved bookmarks",
-      color: "bg-emerald-500/10 dark:bg-emerald-950/20",
-    },
-    {
-      label: "Recently Added Lessons",
-      value: recentlyCreatedLessons.length || 1,
-      subtitle: "Mindful habits",
-      color: "bg-amber-500/10 dark:bg-amber-950/20",
-    },
+    { label: "My Archive Total", value: totalLessonsCreated.count || 0, subtitle: "lessons written" },
+    { label: "Favorites Library", value: savedLessons.length || 0, subtitle: "saved bookmarks" },
+    { label: "Recently Added", value: recentlyCreatedLessons.length || 0, subtitle: "recent logs" },
   ];
 
   const importantActions = [
-    {
-      label: "Create New Lesson",
-      navigation: "/dashboard/add-lesson",
-    },
-    {
-      label: "Manage Existing Lessons",
-      navigation: "/dashboard/my-lessons",
-    },
-    {
-      label: "View Saved Lessons",
-      navigation: "/dashboard/my-favorites",
-    },
+    { label: "Create New Lesson", navigation: "/dashboard/add-lesson" },
+    { label: "Manage My Lessons", navigation: "/dashboard/my-lessons" },
+    { label: "View Saved Lessons", navigation: "/dashboard/my-favorites" },
   ];
 
   return (
-    <div className="space-y-8 p-4">
-      {/* Banner */}
-      <div className="space-y-1.5">
-        <h2 className="text-xl sm:text-2xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
-          {`Welcome back, ${user?.name.split(" ")[0]}!`}
+    <div className="space-y-8 p-4 sm:p-6">
+      <div className="border-b-2 border-black dark:border-white pb-4">
+        <h2 className="text-xl sm:text-2xl font-serif font-black text-black dark:text-white tracking-tight">
+          Welcome back, {user?.name?.split(" ")[0]}!
         </h2>
-        <p className="text-xs text-slate-500">
-          Trace your dynamic contributions, manage your drafted files, and check
-          on premium locks.
+        <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 font-sans">
+          Trace your dynamic contributions, manage your drafted files, and check on premium locks.
         </p>
       </div>
 
-      {/* Core widgets */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        {stats.map((stat, index) => (
-          <div
-            key={index}
-            className={`p-5 rounded-none border border-editorial-bg dark:border-editorial-bg space-y-2 ${stat.color}`}
-          >
-            <p className="text-[10px] font-bold text-slate-800 dark:text-slate-100 uppercase tracking-widest font-mono">
-              {stat.label}
-            </p>
-            <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-extrabold text-slate-800 dark:text-white">
-                {stat.value}
-              </span>
-              <span className="text-xs text-slate-400">{stat.subtitle}</span>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {stats.map((stat, i) => (
+          <div key={i} className="p-5 border-2 border-black dark:border-white bg-editorial-card dark:bg-editorial-dark-card space-y-2">
+            <p className="text-[9px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400">{stat.label}</p>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-3xl font-black text-black dark:text-white font-serif">{stat.value}</span>
+              <span className="text-xs text-neutral-400 font-sans">{stat.subtitle}</span>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        {importantActions.map((action, index) => (
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {importantActions.map((action, i) => (
           <Link
-            key={index}
+            key={i}
             href={action.navigation}
-            className="btn btn-xl p-5 rounded-none border border-editorial-bg dark:border-editorial-bg space-y-2 bg-slate-50 dark:bg-slate-950"
+            className="p-5 border-2 border-black dark:border-white bg-editorial-bg dark:bg-editorial-dark-bg hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] transition-all group"
           >
-            <p className="text-[10px] font-bold text-slate-800 dark:text-slate-100 uppercase tracking-widest font-mono">
-              {action.label}
-            </p>
-            <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-extrabold text-slate-800 dark:text-white">
-                {action.value}
-              </span>
-              <span className="text-xs text-slate-400">{action.subtitle}</span>
-            </div>
+            <p className="text-[10px] font-black uppercase tracking-widest text-black dark:text-white group-hover:text-white dark:group-hover:text-black">{action.label}</p>
+            <p className="text-[9px] font-mono text-neutral-400 group-hover:text-neutral-300 mt-1 uppercase tracking-wider">→ Open</p>
           </Link>
         ))}
       </div>
-      <ChartOverview
-        lessons={recentlyCreatedLessons}
-        favouriteLessons={savedLessons}
-      />
+
+      <ChartOverview lessons={recentlyCreatedLessons} favouriteLessons={savedLessons} />
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React from "react";
 import { fetchAdminLessons } from "@/lib/fetchData";
 import AdminManageLessons from "@/components/AdminDashboard/AdminManageLessons";
+import fetchUserSession from "@/lib/fetchUserSession";
 
 const ManageLessonsPage = async () => {
   const {
@@ -14,6 +15,7 @@ const ManageLessonsPage = async () => {
     reportedLessonCount: 0,
     allLessons: [],
   };
+  const user = await fetchUserSession();
 
   return (
     <AdminManageLessons
@@ -21,6 +23,7 @@ const ManageLessonsPage = async () => {
       privateLessonCount={privateLessonCount}
       reportedLessonCount={reportedLessonCount}
       initialLessons={allLessons}
+      user={user}
     />
   );
 };

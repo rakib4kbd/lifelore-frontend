@@ -1,69 +1,71 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { fetchAdminLessonReportsByLessonId } from "@/lib/fetchData";
+import { useState } from "react";
 
 const AdminReportedLessonsTableData = ({
   rep,
   setActiveReportReason,
-  setReports,
   onHandleReportAction,
 }) => {
-  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isIgnoring, setIsIgnoring] = useState(false);
 
   return (
-    <tr
-      key={rep._id}
-      className="hover:bg-slate-50/50 dark:hover:bg-slate-950/20 transition-all"
-    >
-      <td className="p-3">
-        <span className="font-bold text-slate-800 dark:text-slate-100 block">
+    <tr className="border-b border-black/10 dark:border-white/10 hover:bg-editorial-card/50 dark:hover:bg-editorial-dark-card/50 transition-colors">
+      <td className="p-4">
+        <span className="font-bold text-sm text-black dark:text-white block line-clamp-1">
           {rep.lesson.title}
         </span>
-        <span className="text-[9.5px] text-slate-400 font-mono block">
-          LID: {rep.lessonId}
+        <span className="text-[9px] font-mono text-neutral-400 block">
+          LID: {rep.lessonId?.slice(-12)}
         </span>
       </td>
-
-      <td className="p-3 text-xs font-mono text-slate-550 max-w-[120px] truncate">
+      <td className="p-4 text-[10px] font-mono text-neutral-500 dark:text-neutral-400 max-w-[120px] truncate">
         {rep.user.email}
       </td>
-
-      <td className="p-3 font-semibold text-rose-600 dark:text-rose-450 truncate max-w-[130px]">
+      <td className="p-4 text-[10px] font-bold text-rose-600 dark:text-rose-400 truncate max-w-[130px]">
         {rep.reason}
       </td>
-
-      <td className="p-3 text-center text-slate-400 font-mono">
-        <div className="flex flex-col items-center justify-center">
+      <td className="p-4 text-center text-[10px] font-mono text-neutral-500 dark:text-neutral-400">
+        <div className="flex flex-col items-center">
           <span>{new Date(rep.createdAt).toLocaleTimeString()}</span>
           <span>{new Date(rep.createdAt).toLocaleDateString()}</span>
         </div>
       </td>
-
-      <td className="p-3 text-right space-x-1">
+      <td className="p-4 text-right space-x-1">
         <button
-          onClick={() =>
-            fetchAdminLessonReportsByLessonId(rep.lessonId).then((reports) => {
-              setActiveReportReason(reports);
-            })
-          }
-          className="px-2 py-1 text-[10.5px] font-bold text-indigo-600 border border-slate-100 dark:border-slate-850 hover:bg-slate-50 dark:hover:bg-slate-800 rounded bg-white"
+          onClick={async () => {
+            setLoading(true);
+            await fetchAdminLessonReportsByLessonId(rep.lessonId).then(
+              setActiveReportReason,
+            );
+            setLoading(false);
+          }}
+          className="px-2.5 py-1 text-[9px] font-black uppercase tracking-widest border-2 border-black dark:border-white text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
         >
-          Audit
+          {loading ? "Loading..." : "Audit"}
         </button>
-
         <button
-          onClick={() => onHandleReportAction(rep.lessonId, "Ignore")}
-          className="px-2 py-1 text-[10.5px] font-semibold text-slate-600 border border-slate-100 dark:border-slate-850 hover:bg-slate-100 rounded"
+          onClick={async () => {
+            setIsIgnoring(true);
+            await onHandleReportAction(rep.lessonId, "Ignore");
+            setIsIgnoring(false);
+          }}
+          className="px-2.5 py-1 text-[9px] font-black uppercase tracking-widest border border-black/30 dark:border-white/30 text-neutral-500 dark:text-neutral-400 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
         >
-          Ignore
+          {isIgnoring ? "Ignoring..." : "Ignore"}
         </button>
-
         <button
-          onClick={() => onHandleReportAction(rep.lessonId, "Delete")}
-          className="px-2 py-1 text-[10.5px] font-bold text-white bg-rose-500 hover:bg-rose-600 rounded cursor-pointer"
+          onClick={async () => {
+            setIsDeleting(true);
+            await onHandleReportAction(rep.lessonId, "Delete");
+            setIsDeleting(false);
+          }}
+          className="px-2.5 py-1 text-[9px] font-black uppercase tracking-widest bg-rose-600 text-white hover:bg-rose-700 border-2 border-rose-600 transition-colors"
         >
-          Block/Wipe
+          {isDeleting ? "Deleting..." : "Block/Wipe"}
         </button>
       </td>
     </tr>

@@ -261,7 +261,7 @@ const PublicLessonsPage = () => {
       {/* LOADING */}
       {loading && (
         <div className="py-16 flex justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black dark:border-white" />
+          <div className="loading" />
         </div>
       )}
 
@@ -270,7 +270,7 @@ const PublicLessonsPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 auto-rows-fr auto-cols-fr gap-6">
         {lessons.map((lesson, idx) => {
           // Check if blurred/locked
-          const isPremium = lesson.accessLevel === "premium";
+          const isPremium = lesson.accessLevel === "Premium";
           const isViewerPremium = user?.isPremium || user?.role === "admin";
           const isCreator = user?.id === lesson.creatorId;
           const isBlurred = isPremium && !isViewerPremium && !isCreator;
@@ -296,12 +296,9 @@ const PublicLessonsPage = () => {
                     Membership log access key requested for this lesson sheet.
                   </p>
 
-                  <Link
-                    href="/pricing"
-                    className="mt-5 px-6 py-2 border-2 border-black dark:border-white bg-black hover:bg-transparent text-white hover:text-black dark:bg-white dark:hover:bg-transparent dark:text-black dark:hover:text-white text-[10px] uppercase font-black tracking-widest rounded-none transition-colors cursor-pointer"
-                  >
+                  <button className="mt-5 px-6 py-2 border-2 border-black dark:border-white bg-black hover:bg-transparent text-white hover:text-black dark:bg-white dark:hover:bg-transparent dark:text-black dark:hover:text-white text-[10px] uppercase font-black tracking-widest rounded-none transition-colors cursor-pointer">
                     Unlock with Premium ⭐
-                  </Link>
+                  </button>
                 </div>
               )}
 
@@ -388,7 +385,6 @@ const PublicLessonsPage = () => {
         })}
       </div>
 
-      {/* PAGINATION */}
       {/* PAGINATION */}
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-4">

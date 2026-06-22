@@ -63,3 +63,13 @@ html.dark ::-webkit-scrollbar-thumb {
 .prose a {
   text-decoration: underline;
 }
+
+/* Add cross-browser support to hide scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

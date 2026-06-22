@@ -1,41 +1,29 @@
-import DetailedLessonComments from "@/components/Lessons/DetailedLesson/DetailedLessonComments";
-import DetailedLessonInteractionButtons from "@/components/Lessons/DetailedLesson/DetailedLessonInteractionButtons";
-import { auth } from "@/lib/auth";
-import {
-  fetchCommentsByLessonId,
-  fetchLessonById,
-  fetchLessonCountByCreatorId,
-} from "@/lib/fetchData";
-import { Clock } from "lucide-react";
-import { ChevronRight } from "lucide-react";
-import { Eye } from "lucide-react";
-import { Lock } from "lucide-react";
-import { ChevronLeft } from "lucide-react";
-import { headers } from "next/headers";
-import Image from "next/image";
+"use client";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import React, { use } from "react";
+import DetailedLessonInteractionButtons from "./DetailedLessonInteractionButtons";
+import DetailedLessonComments from "./DetailedLessonComments";
+import { Lock } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+import Image from "next/image";
+import { Eye } from "lucide-react";
+import { Clock } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { router } from "better-auth/api";
 
-const LessonDetailPage = async ({ params }) => {
-  const { user } =
-    (await auth.api.getSession({ headers: await headers() })) || {};
+const DetailedLesson = ({
+  lesson,
+  comments,
+  count,
+  isBlurLocked,
+  estimatedReadingTime,
+}) => {
+  const user = authClient.getSession().then((session) => session.data);
 
-  const { id } = await params;
-  const lesson = await fetchLessonById(id);
-  const comments = await fetchCommentsByLessonId(lesson._id);
-
-  const { count } = await fetchLessonCountByCreatorId(lesson.creatorId);
-  const isBlurLocked =
-    lesson.accessLevel === "Premium" &&
-    (!user || (!user?.isPremium && user.role !== "admin"));
-
-  // Estimated reading time formula: standard index length divided by 200 words/min
-  const wordsCount = lesson.description.split(/\s+/).length;
-  const rawReadTime = Math.ceil(wordsCount / 180);
-  const estimatedReadingTime = rawReadTime < 1 ? 1 : rawReadTime;
-
+  console.log(user);
   return (
-    <div className="space-y-8 my-10 max-w-3xl mx-auto text-left relative">
+    <div className="space-y-8 my-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-left relative">
       {/* Back button link */}
       <Link
         href="/lessons"
@@ -183,4 +171,4 @@ const LessonDetailPage = async ({ params }) => {
   );
 };
 
-export default LessonDetailPage;
+export default DetailedLesson;

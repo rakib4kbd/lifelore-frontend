@@ -26,15 +26,13 @@ const MyLessonsPage = async () => {
   const lessons = await fetchLessonsByCreatorId(user.id);
 
   return (
-    <div className="space-y-6 p-6">
-      {/* Header */}
-      <div>
-        <h2 className="flex items-center gap-2 text-xl font-black uppercase tracking-widest text-black dark:text-white">
+    <div className="space-y-6 p-4 sm:p-6">
+      <div className="border-b-2 border-black dark:border-white pb-4">
+        <h2 className="flex items-center gap-2 text-xl font-serif font-black uppercase tracking-widest text-black dark:text-white">
           <Layers className="h-5 w-5" />
           My Wisdom Ledger
         </h2>
-
-        <p className="mt-1 text-sm text-zinc-500">
+        <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400 font-sans">
           Review, edit and manage your published wisdom lessons.
         </p>
       </div>

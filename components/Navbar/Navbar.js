@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { Moon, Sun, Menu, X, Award, Shield } from "lucide-react";
+import { Menu, X, Award, Shield } from "lucide-react";
 import { authClient, signOut, useSession } from "@/lib/auth-client";
 import { LogOut, LayoutDashboard, UserIcon } from "lucide-react";
 import { useState } from "react";
@@ -28,8 +28,16 @@ export default function Navbar() {
 
   const navLinks = [
     { label: "Home", navigation: "/", isPrivate: false },
-    { label: "Add Lesson", navigation: "/dashboard/add-lesson", isPrivate: true },
-    { label: "My Lessons", navigation: "/dashboard/my-lessons", isPrivate: true },
+    {
+      label: "Add Lesson",
+      navigation: "/dashboard/add-lesson",
+      isPrivate: true,
+    },
+    {
+      label: "My Lessons",
+      navigation: "/dashboard/my-lessons",
+      isPrivate: true,
+    },
     { label: "Public Lessons", navigation: "/lessons", isPrivate: false },
   ];
 
@@ -42,8 +50,8 @@ export default function Navbar() {
     <header className="sticky top-0 z-40 bg-white dark:bg-[#0d0d0d] border-b border-black dark:border-white/50 transition-colors">
       <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-4">
-          <div className="text-xl md:text-2xl font-black tracking-tighter uppercase italic px-4 py-1 border-2 border-black dark:border-white text-black dark:text-white bg-white dark:bg-transparent">
+        <Link href="/" className="flex items-center gap-3 shrink-0">
+          <div className="text-lg md:text-2xl font-black tracking-tighter uppercase italic px-3 md:px-4 py-1 border-2 border-black dark:border-white text-black dark:text-white bg-white dark:bg-transparent whitespace-nowrap">
             LIFELORE
           </div>
           <div className="hidden md:block">
@@ -95,16 +103,6 @@ export default function Navbar() {
 
         {/* Desktop Right Side */}
         <div className="hidden md:flex items-center gap-4">
-          {/* Theme Toggle placeholder — dark class is applied at root level */}
-          <button
-            className="p-2 border border-black/10 dark:border-white/10 hover:border-black dark:hover:border-white text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white cursor-pointer transition-colors"
-            title="Toggle theme"
-            aria-label="Toggle theme"
-          >
-            <Moon className="w-4 h-4 dark:hidden" />
-            <Sun className="w-4 h-4 hidden dark:block" />
-          </button>
-
           {!user ? (
             <>
               <Link
@@ -215,13 +213,6 @@ export default function Navbar() {
 
         {/* Mobile triggers */}
         <div className="flex md:hidden items-center gap-2">
-          <button
-            className="p-2 border border-black/10 dark:border-white/10 text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white cursor-pointer transition-colors"
-            aria-label="Toggle theme"
-          >
-            <Moon className="w-5 h-5 dark:hidden" />
-            <Sun className="w-5 h-5 hidden dark:block text-amber-400" />
-          </button>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900 cursor-pointer"
