@@ -1,9 +1,11 @@
 import AdminOverviewCharts from "@/components/AdminDashboard/AdminOverviewCharts";
 import { fetchAdminStats } from "@/lib/fetchData";
+import getToken from "@/lib/getToken";
 import { Zap } from "lucide-react";
 
 const DashboardAdminOverviewPage = async () => {
-  const adminStats = await fetchAdminStats();
+  const token = await getToken();
+  const adminStats = await fetchAdminStats(token);
 
   console.log(adminStats);
 

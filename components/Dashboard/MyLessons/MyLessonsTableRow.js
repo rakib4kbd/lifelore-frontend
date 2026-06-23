@@ -14,7 +14,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { fetchLessonById } from "@/lib/fetchData";
 import { useRouter } from "next/navigation";
-import { set } from "react-hook-form";
+import { authClient } from "@/lib/auth-client";
 
 const MyLessonsTableRow = ({ lesson, index, user, setEditingLesson }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -31,11 +31,16 @@ const MyLessonsTableRow = ({ lesson, index, user, setEditingLesson }) => {
     )
       return;
     setIsDeleting(true);
+    const { data: tokenData } = await authClient.token();
+    const token = tokenData?.token;
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/${lessonId}`,
       {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       },
     );
     setIsDeleting(false);
@@ -49,11 +54,16 @@ const MyLessonsTableRow = ({ lesson, index, user, setEditingLesson }) => {
 
   const handleVisibilityChange = async () => {
     const nextVisibility = visibility === "Public" ? "Private" : "Public";
+    const { data: tokenData } = await authClient.token();
+    const token = tokenData?.token;
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/visibility/${lesson._id}`,
       {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ visibility: nextVisibility }),
       },
     );
@@ -71,11 +81,16 @@ const MyLessonsTableRow = ({ lesson, index, user, setEditingLesson }) => {
       return;
     }
     const nextAccessLevel = accessLevel === "Premium" ? "Free" : "Premium";
+    const { data: tokenData } = await authClient.token();
+    const token = tokenData?.token;
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/accessLevel/${lesson._id}`,
       {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ accessLevel: nextAccessLevel }),
       },
     );

@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { PlusCircle, Lock } from "lucide-react";
 import showSuccessToast from "@/lib/showSuccessToast";
 import showAlertToast from "@/lib/showAlertToast";
+import { authClient } from "@/lib/auth-client";
 
 const AddLesson = ({ user }) => {
   const [loading, setLoading] = useState(false);
@@ -41,13 +42,15 @@ const AddLesson = ({ user }) => {
     if (loading) return;
     setLoading(true);
     try {
+      const { data: tokenData } = await authClient.token();
+      const token = tokenData?.token;
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${user?.id}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             ...formData,

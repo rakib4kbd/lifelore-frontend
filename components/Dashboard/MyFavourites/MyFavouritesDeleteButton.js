@@ -1,6 +1,7 @@
 "use client";
 import showAlertToast from "@/lib/showAlertToast";
 import showSuccessToast from "@/lib/showSuccessToast";
+import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -9,11 +10,16 @@ const MyFavouritesDeleteButton = ({ userId, lessonId }) => {
   const [loading, setLoading] = useState(false);
   const handleRemove = async () => {
     setLoading(true);
+    const { data: tokenData } = await authClient.token();
+    const token = tokenData?.token;
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/favourite/`,
       {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ userId, lessonId }),
       },
     );

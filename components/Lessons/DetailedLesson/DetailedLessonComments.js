@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 
 const DetailedLessonComments = ({ lesson, user, comments }) => {
   const [localComment, setLocalComment] = useState(comments);
@@ -32,12 +33,15 @@ const DetailedLessonComments = ({ lesson, user, comments }) => {
       createdAt: new Date().toISOString(),
     };
 
+    const { data: tokenData } = await authClient.token();
+    const token = tokenData?.token;
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/comments`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(commentData),
       },
@@ -53,12 +57,15 @@ const DetailedLessonComments = ({ lesson, user, comments }) => {
   const text = watch("text");
 
   const handleDeleteComment = async (commentId) => {
+    const { data: tokenData } = await authClient.token();
+    const token = tokenData?.token;
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/comments/${commentId}`,
       {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       },
     );

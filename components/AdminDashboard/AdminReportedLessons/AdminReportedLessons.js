@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import AdminReportedLessonsTableData from "./AdminReportedLessonsTableData";
 import showSuccessToast from "@/lib/showSuccessToast";
 import showAlertToast from "@/lib/showAlertToast";
+import { authClient } from "@/lib/auth-client";
 
 const AdminReportedLessons = () => {
   const [activeReportReason, setActiveReportReason] = useState(null);
@@ -13,9 +14,16 @@ const AdminReportedLessons = () => {
   const fetchReports = async () => {
     try {
       setLoading(true);
+      const { data: tokenData } = await authClient.token();
+      const token = tokenData?.token;
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/report`,
+        { headers: { Authorization: `Bearer ${token}` } },
       );
+      if (!res.ok) {
+        showAlertToast("Failed to load reports");
+        return;
+      }
       const data = await res.json();
       setReports(data);
     } catch {
@@ -32,10 +40,15 @@ const AdminReportedLessons = () => {
   const onHandleReportAction = async (lessonId, action) => {
     if (!lessonId) return showAlertToast("Missing lesson configuration ID");
     try {
+      const { data: tokenData } = await authClient.token();
+      const token = tokenData?.token;
       if (action === "Delete") {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/${lessonId}`,
-          { method: "DELETE" },
+          {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${token}` },
+          },
         );
         if (res.ok) {
           setActiveReportReason(null);
@@ -46,7 +59,10 @@ const AdminReportedLessons = () => {
       if (action === "Ignore") {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/report/${lessonId}`,
-          { method: "DELETE" },
+          {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${token}` },
+          },
         );
         if (res.ok) {
           setActiveReportReason(null);

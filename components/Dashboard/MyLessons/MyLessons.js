@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import MyLessonsTableRow from "./MyLessonsTableRow";
 import { useForm } from "react-hook-form";
+import { authClient } from "@/lib/auth-client";
 
 const MyLessons = ({ lessons, user }) => {
   const [loading, setLoading] = useState(false);
@@ -43,11 +44,16 @@ const MyLessons = ({ lessons, user }) => {
       setLoading(true);
       const lessonId = editingLesson?._id;
       if (!lessonId) return;
+      const { data: tokenData } = await authClient.token();
+      const token = tokenData?.token;
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}/api/admin/lessons/${lessonId}`,
         {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           body: JSON.stringify(data),
         },
       );

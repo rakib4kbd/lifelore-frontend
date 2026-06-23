@@ -7,6 +7,7 @@ import { ThumbsUp } from "lucide-react";
 import { Share2 } from "lucide-react";
 import { AlertTriangle } from "lucide-react";
 import { useState } from "react";
+import { authClient } from "@/lib/auth-client";
 
 const DetailedLessonInteractionButtons = ({ lesson, user }) => {
   const [isFavorite, setIsFavorite] = useState(
@@ -22,11 +23,16 @@ const DetailedLessonInteractionButtons = ({ lesson, user }) => {
   );
 
   const handleToggleFavorite = async () => {
+    const { data: tokenData } = await authClient.token();
+    const token = tokenData?.token;
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/favourite`,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ lessonId: lesson._id, userId: user.id }),
       },
     );
@@ -44,12 +50,15 @@ const DetailedLessonInteractionButtons = ({ lesson, user }) => {
 
     try {
       setSubmittingReport(true);
+      const { data: tokenData } = await authClient.token();
+      const token = tokenData?.token;
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/report`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             lessonId: lesson._id,
@@ -72,12 +81,17 @@ const DetailedLessonInteractionButtons = ({ lesson, user }) => {
     }
   };
 
-  const handleToogleLike = async (reactionType) => {
+  const handleToogleLike = async () => {
+    const { data: tokenData } = await authClient.token();
+    const token = tokenData?.token;
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/like`,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ lessonId: lesson._id, userId: user.id }),
       },
     );

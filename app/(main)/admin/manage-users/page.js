@@ -1,12 +1,14 @@
 import AdminManageUsers from "@/components/AdminDashboard/AdminManageUsers";
 import { auth } from "@/lib/auth";
 import { fetchUsersWithLessonCount } from "@/lib/fetchData";
+import getToken from "@/lib/getToken";
 import { Users } from "lucide-react";
 import { headers } from "next/headers";
 
 const ManageUsers = async () => {
   const { user } = await auth.api.getSession({ headers: await headers() });
-  const usersList = await fetchUsersWithLessonCount();
+  const token = await getToken();
+  const usersList = await fetchUsersWithLessonCount(token);
 
   return (
     <div className="space-y-6 p-4 sm:p-6">
@@ -35,7 +37,12 @@ const ManageUsers = async () => {
             </thead>
             <tbody>
               {usersList.map((target, index) => (
-                <AdminManageUsers key={target._id} user={user} target={target} index={index} />
+                <AdminManageUsers
+                  key={target._id}
+                  user={user}
+                  target={target}
+                  index={index}
+                />
               ))}
             </tbody>
           </table>

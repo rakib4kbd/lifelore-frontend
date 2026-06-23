@@ -1,6 +1,7 @@
 "use client";
 
 import { fetchAdminLessonReportsByLessonId } from "@/lib/fetchData";
+import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
 
 const AdminReportedLessonsTableData = ({
@@ -38,7 +39,9 @@ const AdminReportedLessonsTableData = ({
         <button
           onClick={async () => {
             setLoading(true);
-            await fetchAdminLessonReportsByLessonId(rep.lessonId).then(
+            const { data: tokenData } = await authClient.token();
+            const token = tokenData?.token;
+            await fetchAdminLessonReportsByLessonId(rep.lessonId, token).then(
               setActiveReportReason,
             );
             setLoading(false);

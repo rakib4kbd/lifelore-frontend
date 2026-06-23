@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Trash2 } from "lucide-react";
 import showSuccessToast from "@/lib/showSuccessToast";
 import showAlertToast from "@/lib/showAlertToast";
+import { authClient } from "@/lib/auth-client";
 
 const AdminManageUsers = ({ user, target, index }) => {
   const [current, setCurrent] = useState(target);
@@ -17,11 +18,16 @@ const AdminManageUsers = ({ user, target, index }) => {
     const nextRole = current.role === "admin" ? "user" : "admin";
     try {
       setLoading(true);
+      const { data: tokenData } = await authClient.token();
+      const token = tokenData?.token;
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}/api/users/${current._id}`,
         {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           body: JSON.stringify({ role: nextRole }),
         },
       );
@@ -46,9 +52,14 @@ const AdminManageUsers = ({ user, target, index }) => {
     if (!confirmed) return;
     try {
       setLoading(true);
+      const { data: tokenData } = await authClient.token();
+      const token = tokenData?.token;
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}/api/users/${current._id}`,
-        { method: "DELETE" },
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        },
       );
       if (!res.ok) throw new Error("Delete failed");
       setDeleted(true);

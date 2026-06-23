@@ -10,7 +10,8 @@ import { X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Lock } from "lucide-react";
-import { fetchAdminLessons } from "@/lib/fetchData";
+import { fetchAdminLessons, fetchLessonById } from "@/lib/fetchData";
+import { authClient } from "@/lib/auth-client";
 
 const AdminManageLessons = ({
   publicLessonCount,
@@ -57,11 +58,16 @@ const AdminManageLessons = ({
       setLoading(true);
       const lessonId = editingLesson?._id;
       if (!lessonId) return;
+      const { data: tokenData } = await authClient.token();
+      const token = tokenData?.token;
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}/api/admin/lessons/${lessonId}`,
         {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           body: JSON.stringify(data),
         },
       );
@@ -72,7 +78,9 @@ const AdminManageLessons = ({
       setEditingLesson(null);
       reset();
       setLoading(true);
-      setLessons(await fetchAdminLessons().then((data) => data.allLessons));
+      setLessons(
+        await fetchAdminLessons(token).then((data) => data.allLessons),
+      );
       setLoading(false);
     } catch (err) {
       console.error("Error updating lesson:", err);
@@ -89,11 +97,16 @@ const AdminManageLessons = ({
   const handleToggleFeatured = async (lessonId, currentValue) => {
     try {
       setLoading(true);
+      const { data: tokenData } = await authClient.token();
+      const token = tokenData?.token;
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}/api/admin/lessons/${lessonId}`,
         {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           body: JSON.stringify({ isFeatured: !currentValue }),
         },
       );
@@ -116,11 +129,16 @@ const AdminManageLessons = ({
   const handleToggleReviewed = async (lessonId, currentValue) => {
     try {
       setLoading(true);
+      const { data: tokenData } = await authClient.token();
+      const token = tokenData?.token;
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}/api/admin/lessons/${lessonId}`,
         {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           body: JSON.stringify({ isReviewed: !currentValue }),
         },
       );
@@ -146,9 +164,14 @@ const AdminManageLessons = ({
     if (!window.confirm(`Delete "${title}" permanently?`)) return;
     try {
       setLoading(true);
+      const { data: tokenData } = await authClient.token();
+      const token = tokenData?.token;
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/${lessonId}`,
-        { method: "DELETE" },
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        },
       );
       if (!res.ok) throw new Error();
       setLessons((prev) => prev.filter((l) => l._id !== lessonId));
