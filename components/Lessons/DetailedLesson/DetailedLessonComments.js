@@ -165,7 +165,6 @@ const DetailedLessonComments = ({ lesson, user, comments }) => {
                   {(user?.id === comment.userId || user?.role === "admin") && (
                     <button
                       onClick={() => {
-                        console.log(comment._id);
                         handleDeleteComment(comment._id);
                       }}
                       className="p-1 rounded text-neutral-400 hover:text-rose-600 transition-colors opacity-100"

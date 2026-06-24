@@ -4,12 +4,17 @@ import { useMemo, useState } from "react";
 import MyFavouritesDeleteButton from "./MyFavouritesDeleteButton";
 import Link from "next/link";
 import { Filter } from "lucide-react";
+import Pagination from "@/components/ui/Pagination";
+
+const PAGE_SIZE = 8;
 
 export default function MyFavouriteLessonsTable({ favouriteLessons, userId }) {
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
   const [selectedTone, setSelectedTone] = useState("All Tones");
+  const [page, setPage] = useState(1);
 
   const filteredLessons = useMemo(() => {
+    setPage(1);
     return favouriteLessons.filter((lesson) => {
       const categoryMatch =
         selectedCategory === "All Categories" ||
@@ -21,6 +26,9 @@ export default function MyFavouriteLessonsTable({ favouriteLessons, userId }) {
       return categoryMatch && toneMatch;
     });
   }, [favouriteLessons, selectedCategory, selectedTone]);
+
+  const totalPages = Math.ceil(filteredLessons.length / PAGE_SIZE);
+  const pagedFavourites = filteredLessons.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   return (
     <>
@@ -74,7 +82,7 @@ export default function MyFavouriteLessonsTable({ favouriteLessons, userId }) {
                 </tr>
               </thead>
               <tbody>
-                {filteredLessons.map((fav, index) => (
+                {pagedFavourites.map((fav, index) => (
                   <tr
                     key={fav._id}
                     className={`border-b border-black/10 dark:border-white/10 ${index % 2 === 0 ? "bg-[#FAF9F6] dark:bg-editorial-dark-bg" : "bg-white dark:bg-editorial-dark-card"}`}
@@ -131,6 +139,7 @@ export default function MyFavouriteLessonsTable({ favouriteLessons, userId }) {
           </div>
         </div>
       )}
+      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} totalItems={filteredLessons.length} pageSize={PAGE_SIZE} />
     </>
   );
 }

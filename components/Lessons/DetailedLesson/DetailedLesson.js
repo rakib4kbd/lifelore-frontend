@@ -10,7 +10,6 @@ import { Eye } from "lucide-react";
 import { Clock } from "lucide-react";
 import { ChevronLeft } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
-import { router } from "better-auth/api";
 
 const DetailedLesson = ({
   lesson,
@@ -21,7 +20,6 @@ const DetailedLesson = ({
 }) => {
   const user = authClient.getSession().then((session) => session.data);
 
-  console.log(user);
   return (
     <div className="space-y-8 my-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-left relative">
       {/* Back button link */}

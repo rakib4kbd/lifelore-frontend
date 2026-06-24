@@ -1,10 +1,6 @@
-import Link from "next/link";
 import { stripe } from "@/lib/stripe";
 import { redirect } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
-import ClientSignOut from "@/components/PaymentSuccess";
+import { upgradeUserToPremium } from "@/lib/auth";
 import PaymentSuccess from "@/components/PaymentSuccess";
 
 const CheckoutSuccess = async ({ searchParams }) => {
@@ -14,32 +10,19 @@ const CheckoutSuccess = async ({ searchParams }) => {
     throw new Error("Please provide a valid session_id (`cs_test_...`)");
   }
 
-  const {
-    status,
-    metadata: { userId },
-  } = await stripe.checkout.sessions.retrieve(session_id, {
-    expand: ["line_items", "payment_intent"],
-  });
+  const { status, metadata } = await stripe.checkout.sessions.retrieve(
+    session_id,
+    { expand: ["line_items", "payment_intent"] },
+  );
 
-  if (status === "open") {
-    redirect("/");
-  }
+  if (status === "open") redirect("/");
 
   let upgradeFailed = false;
 
   if (status === "complete") {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_API}/api/users/${userId}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ isPremium: true }),
-      },
-    );
-
-    if (!res.ok) {
+    try {
+      await upgradeUserToPremium(metadata.userId);
+    } catch {
       upgradeFailed = true;
     }
   }
@@ -51,19 +34,10 @@ const CheckoutSuccess = async ({ searchParams }) => {
           <h2 className="text-5xl font-serif italic text-black dark:text-white">
             Upgrade Pending
           </h2>
-
           <p className="text-sm text-neutral-600 dark:text-neutral-300 font-sans leading-relaxed">
             Your payment was received, but we could not update your account
-            automatically. Please contact support and we will resolve it
-            promptly.
+            automatically. Please contact support.
           </p>
-
-          <Link
-            href="/"
-            className="inline-block px-8 py-3 border-2 border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-sans font-bold text-xs uppercase tracking-widest hover:bg-transparent hover:text-black dark:hover:bg-transparent dark:hover:text-white transition-colors"
-          >
-            Return Home Perimeter
-          </Link>
         </div>
       </div>
     );

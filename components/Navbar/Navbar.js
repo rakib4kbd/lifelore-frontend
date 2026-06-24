@@ -3,17 +3,19 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, Award, Shield } from "lucide-react";
+import { Menu, X, Award, Shield, Sun, Moon } from "lucide-react";
 import { authClient, signOut, useSession } from "@/lib/auth-client";
 import { LogOut, LayoutDashboard, UserIcon } from "lucide-react";
 import { useState } from "react";
 import showToast from "@/lib/showAlertToast";
+import { useTheme } from "@/components/Providers/ThemeProvider";
 
 export default function Navbar() {
   const { data, isPending } = useSession();
   const user = data?.user;
   const pathname = usePathname();
   const router = useRouter();
+  const { theme, toggleTheme } = useTheme();
 
   const handleLogout = async () => {
     const { data, error } = await signOut();
@@ -47,7 +49,7 @@ export default function Navbar() {
   });
 
   return (
-    <header className="sticky top-0 z-40 bg-white dark:bg-[#0d0d0d] border-b border-black dark:border-white/50 transition-colors">
+    <header className="sticky top-0 z-40 bg-white dark:bg-editorial-dark-bg border-b border-black dark:border-white/50 transition-colors">
       <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 shrink-0">
@@ -103,11 +105,24 @@ export default function Navbar() {
 
         {/* Desktop Right Side */}
         <div className="hidden md:flex items-center gap-4">
+          {/* Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            className="p-2 border-2 border-black dark:border-white text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+          >
+            {theme === "dark" ? (
+              <Sun className="w-4 h-4" />
+            ) : (
+              <Moon className="w-4 h-4" />
+            )}
+          </button>
+
           {!user ? (
             <>
               <Link
                 href="/auth/login"
-                className="px-3 py-2 text-[11px] font-bold uppercase tracking-widest text-[#1a1a1a]/85 dark:text-[#faf9f6]/85 hover:text-black dark:hover:text-white cursor-pointer"
+                className="px-3 py-2 text-[11px] font-bold uppercase tracking-widest text-editorial-text/85 dark:text-editorial-dark-text/85 hover:text-black dark:hover:text-white cursor-pointer"
               >
                 Login
               </Link>
@@ -136,7 +151,7 @@ export default function Navbar() {
                   />
                 </div>
                 <div className="text-left hidden lg:block">
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-black dark:text-white truncate max-w-[120px]">
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-black dark:text-white truncate max-w-30">
                     {user.name}
                   </div>
                   <div className="text-[9px] text-neutral-400 dark:text-neutral-500 font-mono uppercase">
@@ -151,9 +166,9 @@ export default function Navbar() {
                     className="fixed inset-0 z-10"
                     onClick={() => setDropdownOpen(false)}
                   />
-                  <div className="absolute right-0 mt-2 w-56 rounded-none bg-[#F9F7F2] dark:bg-[#181816] border-2 border-black dark:border-white shadow-none overflow-hidden z-20">
+                  <div className="absolute right-0 mt-2 w-56 rounded-none bg-[#F9F7F2] dark:bg-editorial-dark-card border-2 border-black dark:border-white shadow-none overflow-hidden z-20">
                     <div className="p-4 border-b border-black dark:border-white/50 bg-[#F5F2EA] dark:bg-[#20201d]">
-                      <p className="text-[9px] uppercase tracking-widest text-[#1a1a1a]/60 dark:text-[#faf9f6]/60">
+                      <p className="text-[9px] uppercase tracking-widest text-editorial-text/60 dark:text-editorial-dark-text/60">
                         Logged in as
                       </p>
                       <p className="text-sm font-serif italic text-black dark:text-white truncate">
@@ -213,6 +228,18 @@ export default function Navbar() {
 
         {/* Mobile triggers */}
         <div className="flex md:hidden items-center gap-2">
+          {/* Theme Toggle Mobile */}
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            className="p-2 border border-black dark:border-white text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+          >
+            {theme === "dark" ? (
+              <Sun className="w-4 h-4" />
+            ) : (
+              <Moon className="w-4 h-4" />
+            )}
+          </button>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900 cursor-pointer"
@@ -229,7 +256,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Panel */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-black/10 dark:border-white/10 bg-white dark:bg-[#0d0d0d] p-4 flex flex-col gap-1 shadow-lg">
+        <div className="md:hidden border-t border-black/10 dark:border-white/10 bg-white dark:bg-editorial-dark-bg p-4 flex flex-col gap-1 shadow-lg">
           {filteredLinks.map((link) => (
             <Link
               key={link.label}

@@ -127,8 +127,7 @@ const PublicLessonsPageContent = () => {
   // UI
   // -------------------------
   return (
-    <Suspense>
-      <div className="space-y-8 my-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="space-y-8 my-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* HEADER */}
         <div className="text-left max-w-4xl border-b-2 border-black dark:border-white pb-6 space-y-3">
           <h1 className="text-4xl sm:text-5xl font-serif font-black">
@@ -410,7 +409,6 @@ const PublicLessonsPageContent = () => {
           </div>
         )}
       </div>
-    </Suspense>
   );
 };
 

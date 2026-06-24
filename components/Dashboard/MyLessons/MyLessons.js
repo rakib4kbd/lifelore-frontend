@@ -3,11 +3,17 @@ import { X, Edit, Lock, Filter } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import MyLessonsTableRow from "./MyLessonsTableRow";
+import Pagination from "@/components/ui/Pagination";
+
+const PAGE_SIZE = 8;
 import { useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth-client";
 
 const MyLessons = ({ lessons, user }) => {
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const totalPages = Math.ceil(lessons.length / PAGE_SIZE);
+  const pagedLessons = lessons.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const [editingLesson, setEditingLesson] = useState(null);
   const router = useRouter();
 
@@ -116,7 +122,7 @@ const MyLessons = ({ lessons, user }) => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-black/10 dark:divide-white/10">
-                {lessons.map((lesson, index) => (
+                {pagedLessons.map((lesson, index) => (
                   <MyLessonsTableRow
                     key={lesson._id}
                     lesson={lesson}
@@ -130,6 +136,7 @@ const MyLessons = ({ lessons, user }) => {
           </div>
         </div>
       )}
+      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} totalItems={lessons.length} pageSize={PAGE_SIZE} />
 
       {editingLesson && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-40">

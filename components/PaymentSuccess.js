@@ -1,14 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { authClient } from "../lib/auth-client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 const PaymentSuccess = () => {
-  const router = useRouter();
-  authClient.signOut();
-  router.refresh();
+  useEffect(() => {
+    // Sessions were revoked server-side after upgrade.
+    // Sign out client-side so the next login gets a fresh premium session.
+    authClient.signOut();
+  }, []);
 
   return (
     <div className="my-10 px-4 sm:px-0">
@@ -19,8 +20,7 @@ const PaymentSuccess = () => {
 
         <p className="text-sm text-neutral-600 dark:text-neutral-300 font-sans leading-relaxed">
           Your payment has been recorded and your account has been elevated to
-          Premium status. The complete lesson archive is now available within
-          your library.
+          Premium status. Sign back in to access the complete lesson archive.
         </p>
 
         <Link
