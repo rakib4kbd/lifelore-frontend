@@ -8,6 +8,7 @@ import { Share2 } from "lucide-react";
 import { AlertTriangle } from "lucide-react";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import showAlertToast from "@/lib/showAlertToast";
 
 const DetailedLessonInteractionButtons = ({ lesson, user }) => {
   const [isFavorite, setIsFavorite] = useState(
@@ -25,6 +26,10 @@ const DetailedLessonInteractionButtons = ({ lesson, user }) => {
   const handleToggleFavorite = async () => {
     const { data: tokenData } = await authClient.token();
     const token = tokenData?.token;
+    if (!token) {
+      showAlertToast("Please sign in to interact with this lesson.");
+      return;
+    }
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/favourite`,
       {
@@ -33,7 +38,7 @@ const DetailedLessonInteractionButtons = ({ lesson, user }) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ lessonId: lesson._id, userId: user.id }),
+        body: JSON.stringify({ lessonId: lesson._id, userId: user?.id }),
       },
     );
 
@@ -47,6 +52,10 @@ const DetailedLessonInteractionButtons = ({ lesson, user }) => {
   // Report submission
   const handleReportSubmit = async (e) => {
     e.preventDefault();
+    if (!token) {
+      showAlertToast("Please sign in to interact with this lesson.");
+      return;
+    }
 
     try {
       setSubmittingReport(true);
@@ -62,7 +71,7 @@ const DetailedLessonInteractionButtons = ({ lesson, user }) => {
           },
           body: JSON.stringify({
             lessonId: lesson._id,
-            userId: user.id,
+            userId: user?.id,
             reason: reportReason,
           }),
         },
@@ -84,6 +93,10 @@ const DetailedLessonInteractionButtons = ({ lesson, user }) => {
   const handleToogleLike = async () => {
     const { data: tokenData } = await authClient.token();
     const token = tokenData?.token;
+    if (!token) {
+      showAlertToast("Please sign in to interact with this lesson.");
+      return;
+    }
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_API}/api/lessons/like`,
       {
@@ -92,7 +105,7 @@ const DetailedLessonInteractionButtons = ({ lesson, user }) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ lessonId: lesson._id, userId: user.id }),
+        body: JSON.stringify({ lessonId: lesson._id, userId: user?.id }),
       },
     );
 

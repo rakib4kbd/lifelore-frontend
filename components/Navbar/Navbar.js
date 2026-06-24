@@ -142,17 +142,17 @@ export default function Navbar() {
                 <div className="w-9 h-9 rounded-full border border-black dark:border-white p-0.5 overflow-hidden relative">
                   <Image
                     src={
-                      user.image ||
+                      user?.image ||
                       "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
                     }
-                    alt={user.name}
+                    alt={user?.image || ""}
                     className="rounded-full object-cover"
                     fill
                   />
                 </div>
                 <div className="text-left hidden lg:block">
                   <div className="text-[11px] font-bold uppercase tracking-wider text-black dark:text-white truncate max-w-30">
-                    {user.name}
+                    {user?.name}
                   </div>
                   <div className="text-[9px] text-neutral-400 dark:text-neutral-500 font-mono uppercase">
                     {user.role}
@@ -172,7 +172,7 @@ export default function Navbar() {
                         Logged in as
                       </p>
                       <p className="text-sm font-serif italic text-black dark:text-white truncate">
-                        {user.name}
+                        {user?.name}
                       </p>
                       <p className="text-[10px] font-mono text-neutral-500 dark:text-neutral-400 truncate">
                         {user.email}
@@ -291,17 +291,17 @@ export default function Navbar() {
                 <div className="w-10 h-10 rounded-full border border-black dark:border-white overflow-hidden relative shrink-0">
                   <Image
                     src={
-                      user.image ||
+                      user?.image ||
                       "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
                     }
-                    alt={user.name}
+                    alt={user?.name || "image"}
                     fill
                     className="object-cover rounded-full"
                   />
                 </div>
                 <div>
                   <p className="text-[11px] font-black uppercase tracking-wider text-black dark:text-white">
-                    {user.name}
+                    {user?.name}
                   </p>
                   <p className="text-[10px] text-neutral-400 dark:text-neutral-500 font-mono">
                     {user.email}

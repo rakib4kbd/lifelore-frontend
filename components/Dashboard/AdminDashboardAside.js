@@ -1,5 +1,12 @@
 "use client";
-import { BarChart, Users, BookOpen, Settings, ShieldAlert, ShieldCheck } from "lucide-react";
+import {
+  BarChart,
+  Users,
+  BookOpen,
+  Settings,
+  ShieldAlert,
+  ShieldCheck,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -8,7 +15,11 @@ const AdminDashboardAside = ({ user }) => {
     { label: "System Overview", href: "/admin/overview", icon: BarChart },
     { label: "Manage Users", href: "/admin/manage-users", icon: Users },
     { label: "Manage Lessons", href: "/admin/manage-lessons", icon: BookOpen },
-    { label: "Reported Lessons", href: "/admin/reported-lessons", icon: ShieldAlert },
+    {
+      label: "Reported Lessons",
+      href: "/admin/reported-lessons",
+      icon: ShieldAlert,
+    },
     { label: "My Profile", href: "/admin/profile", icon: Settings },
   ];
 
@@ -22,7 +33,9 @@ const AdminDashboardAside = ({ user }) => {
           <ShieldCheck className="w-4 h-4" />
         </div>
         <div className="overflow-hidden">
-          <h3 className="font-serif font-black text-xs uppercase tracking-tight truncate">{user.name}</h3>
+          <h3 className="font-serif font-black text-xs uppercase tracking-tight truncate">
+            {user?.name}
+          </h3>
           {user?.role === "admin" && (
             <span className="inline-flex px-2 py-0.5 bg-rose-600 text-white border border-black text-[8px] font-black uppercase tracking-widest mt-0.5">
               ADMIN CONTROL

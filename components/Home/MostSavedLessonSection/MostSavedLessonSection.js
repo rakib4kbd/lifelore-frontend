@@ -122,6 +122,7 @@ const MostSavedLessonSection = async () => {
         <div className="p-6 bg-editorial-card dark:bg-editorial-dark-card border-2 border-black dark:border-white rounded-none shadow-none space-y-4">
           {contributors.length > 0 ? (
             contributors
+              .slice(0, 5)
               .filter((contrib) => contrib.totalLessons > 0)
               .map((contrib, idx) => (
                 <div

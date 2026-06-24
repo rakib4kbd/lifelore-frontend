@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { MessageCircle, Send } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -28,7 +28,7 @@ const DetailedLessonComments = ({ lesson, user, comments }) => {
 
     const commentData = {
       lessonId: lesson._id,
-      userId: user.id,
+      userId: user?.id,
       text: data.text,
       createdAt: new Date().toISOString(),
     };
@@ -145,7 +145,7 @@ const DetailedLessonComments = ({ lesson, user, comments }) => {
                     <figure className="w-5 h-5 relative">
                       <Image
                         src={
-                          comment.userImage ||
+                          user?.image ||
                           "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
                         }
                         alt=""
@@ -154,7 +154,7 @@ const DetailedLessonComments = ({ lesson, user, comments }) => {
                       />
                     </figure>
                     <span className="font-serif font-black text-black dark:text-white text-xs">
-                      {comment.userName}
+                      {user?.name}
                     </span>
                     <span className="text-[9px] text-neutral-400 font-mono uppercase font-black">
                       {new Date(comment.createdAt).toLocaleDateString()}

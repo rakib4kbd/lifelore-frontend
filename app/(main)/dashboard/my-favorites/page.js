@@ -31,7 +31,7 @@ const MyFavouritePage = async () => {
     );
   }
 
-  const favouriteLessons = await fetchFavouriteLessonsByUserId(user.id);
+  const favouriteLessons = await fetchFavouriteLessonsByUserId(user?.id);
 
   return (
     <div className="space-y-6 p-4 sm:p-6">
@@ -46,7 +46,7 @@ const MyFavouritePage = async () => {
 
       <MyFavouriteLessonsTable
         favouriteLessons={favouriteLessons}
-        userId={user.id}
+        userId={user?.id}
       />
     </div>
   );

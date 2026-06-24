@@ -21,7 +21,7 @@ export async function POST() {
       ],
       mode: "payment",
       metadata: {
-        userId: user.id,
+        userId: user?.id,
       },
       success_url: `${origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/payment/canceled?session_id={CHECKOUT_SESSION_ID}`,

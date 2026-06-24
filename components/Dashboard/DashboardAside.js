@@ -1,13 +1,29 @@
 "use client";
-import { BarChart, CirclePlus, FileText, Heart, Settings, Award, ShieldCheck } from "lucide-react";
+import {
+  BarChart,
+  CirclePlus,
+  FileText,
+  Heart,
+  Settings,
+  Award,
+  ShieldCheck,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const DashboardAside = ({ user }) => {
   const dashboardNavigation = [
     { label: "Overview", href: "/dashboard/overview", icon: BarChart },
-    { label: "Log New Lesson", href: "/dashboard/add-lesson", icon: CirclePlus },
-    { label: "My Wisdom Ledger", href: "/dashboard/my-lessons", icon: FileText },
+    {
+      label: "Log New Lesson",
+      href: "/dashboard/add-lesson",
+      icon: CirclePlus,
+    },
+    {
+      label: "My Wisdom Ledger",
+      href: "/dashboard/my-lessons",
+      icon: FileText,
+    },
     { label: "My Saved Wisdom", href: "/dashboard/my-favorites", icon: Heart },
     { label: "Manage Profile", href: "/dashboard/profile", icon: Settings },
   ];
@@ -22,7 +38,9 @@ const DashboardAside = ({ user }) => {
           <ShieldCheck className="w-4 h-4" />
         </div>
         <div className="overflow-hidden">
-          <h3 className="font-serif font-black text-xs uppercase tracking-tight truncate">{user.name}</h3>
+          <h3 className="font-serif font-black text-xs uppercase tracking-tight truncate">
+            {user?.name}
+          </h3>
           {user?.isPremium || user?.role === "admin" ? (
             <span className="inline-flex px-2 py-0.5 bg-amber-500 text-black text-[8px] font-black uppercase tracking-widest mt-0.5 border border-black">
               PREMIUM SCRIBE
@@ -64,7 +82,8 @@ const DashboardAside = ({ user }) => {
             <Award className="w-4 h-4" /> Upgrade to Premium
           </h4>
           <p className="text-[10px] text-neutral-600 dark:text-neutral-400 leading-relaxed font-serif italic">
-            Unlock unlimited folder slots, premium manuscript badges, and priority view list boosts for lifetime.
+            Unlock unlimited folder slots, premium manuscript badges, and
+            priority view list boosts for lifetime.
           </p>
           <Link
             href="/pricing"

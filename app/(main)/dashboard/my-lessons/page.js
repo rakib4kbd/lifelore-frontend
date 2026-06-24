@@ -23,7 +23,7 @@ const MyLessonsPage = async () => {
     redirect("/auth/login");
   }
 
-  const lessons = await fetchLessonsByCreatorId(user.id);
+  const lessons = await fetchLessonsByCreatorId(user?.id);
 
   return (
     <div className="space-y-6 p-4 sm:p-6">
