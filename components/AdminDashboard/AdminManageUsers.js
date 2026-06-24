@@ -13,9 +13,7 @@ const AdminManageUsers = ({ user, target, index }) => {
 
   if (deleted) return null;
 
-  const handleRoleToggle = async () => {
-    if (current._id === user?.id) return;
-    const nextRole = current.role === "admin" ? "user" : "admin";
+  const patchUser = async (fields, successMsg) => {
     try {
       setLoading(true);
       const { data: tokenData } = await authClient.token();
@@ -28,20 +26,36 @@ const AdminManageUsers = ({ user, target, index }) => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ role: nextRole }),
+          body: JSON.stringify(fields),
         },
       );
-      if (!res.ok) throw new Error("Failed to toggle role");
+      if (!res.ok) throw new Error("Update failed");
       const data = await res.json();
-      setCurrent((prev) => ({ ...prev, role: data.role ?? nextRole }));
-      showSuccessToast(
-        nextRole === "admin" ? "Promoted to Admin" : "Demoted to User",
-      );
-    } catch (err) {
-      showAlertToast("Role update failed");
+      setCurrent((prev) => ({ ...prev, ...fields, ...data }));
+      showSuccessToast(successMsg);
+    } catch {
+      showAlertToast("Update failed");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleRoleToggle = async () => {
+    if (current._id === user?.id) return;
+    const nextRole = current.role === "admin" ? "user" : "admin";
+    await patchUser(
+      { role: nextRole },
+      nextRole === "admin" ? "Promoted to Admin" : "Demoted to User",
+    );
+  };
+
+  const handlePlanToggle = async () => {
+    if (current._id === user?.id) return;
+    const nextPlan = !current.isPremium;
+    await patchUser(
+      { isPremium: nextPlan },
+      nextPlan ? "Upgraded to Premium" : "Downgraded to Free",
+    );
   };
 
   const handleDelete = async () => {
@@ -114,15 +128,17 @@ const AdminManageUsers = ({ user, target, index }) => {
         </button>
       </td>
       <td className="px-5 py-4">
-        <span
-          className={`border-2 px-2.5 py-1 text-[10px] font-black uppercase tracking-widest ${
+        <button
+          onClick={handlePlanToggle}
+          disabled={loading || current._id === user?.id}
+          className={`border-2 px-2.5 py-1 text-[10px] font-black uppercase tracking-widest transition-all disabled:cursor-not-allowed disabled:opacity-50 ${
             current.isPremium
-              ? "border-amber-500 text-amber-600 dark:text-amber-400"
-              : "border-black dark:border-white text-neutral-500 dark:text-neutral-400"
+              ? "border-amber-500 text-amber-600 dark:text-amber-400 hover:bg-amber-500 hover:text-white hover:border-amber-500"
+              : "border-black dark:border-white text-neutral-600 dark:text-neutral-300 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
           }`}
         >
           {current.isPremium ? "Premium" : "Free"}
-        </span>
+        </button>
       </td>
       <td className="px-5 py-4 text-center">
         <span className="text-xs font-mono font-black text-black dark:text-white">

@@ -1,4 +1,4 @@
-import AdminManageUsers from "@/components/AdminDashboard/AdminManageUsers";
+import AdminUsersTable from "@/components/AdminDashboard/AdminUsersTable";
 import { auth } from "@/lib/auth";
 import { fetchUsersWithLessonCount } from "@/lib/fetchData";
 import getToken from "@/lib/getToken";
@@ -21,33 +21,7 @@ const ManageUsers = async () => {
           Audit users, manage permissions, premium access and moderation actions.
         </p>
       </div>
-
-      <div className="overflow-hidden border-2 border-black dark:border-white">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b-2 border-black dark:border-white bg-black text-[10px] font-black uppercase tracking-widest text-white dark:bg-white dark:text-black">
-                <th className="px-5 py-4 text-left">User</th>
-                <th className="px-5 py-4 text-left">Email</th>
-                <th className="px-5 py-4 text-left">Role</th>
-                <th className="px-5 py-4 text-left">Plan</th>
-                <th className="px-5 py-4 text-center">Lessons</th>
-                <th className="px-5 py-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {usersList.map((target, index) => (
-                <AdminManageUsers
-                  key={target._id}
-                  user={user}
-                  target={target}
-                  index={index}
-                />
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <AdminUsersTable usersList={usersList} user={user} />
     </div>
   );
 };

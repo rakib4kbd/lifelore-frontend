@@ -1,6 +1,9 @@
 "use client";
 import { AlertTriangle, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import Pagination from "@/components/ui/Pagination";
+
+const PAGE_SIZE = 10;
 import AdminReportedLessonsTableData from "./AdminReportedLessonsTableData";
 import showSuccessToast from "@/lib/showSuccessToast";
 import showAlertToast from "@/lib/showAlertToast";
@@ -10,6 +13,9 @@ const AdminReportedLessons = () => {
   const [activeReportReason, setActiveReportReason] = useState(null);
   const [loading, setLoading] = useState(true);
   const [reports, setReports] = useState([]);
+  const [page, setPage] = useState(1);
+  const totalPages = Math.ceil(reports.length / PAGE_SIZE);
+  const pagedReports = reports.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const fetchReports = async () => {
     try {
@@ -110,7 +116,7 @@ const AdminReportedLessons = () => {
               </tr>
             </thead>
             <tbody>
-              {reports.map((rep) => (
+              {pagedReports.map((rep) => (
                 <AdminReportedLessonsTableData
                   key={rep._id}
                   rep={rep}
@@ -124,6 +130,7 @@ const AdminReportedLessons = () => {
           </table>
         </div>
       )}
+      <Pagination page={page} totalPages={totalPages} onPageChange={(p) => { setPage(p); setActiveReportReason(null); }} totalItems={reports.length} pageSize={PAGE_SIZE} />
 
       {activeReportReason && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
@@ -189,7 +196,7 @@ const AdminReportedLessons = () => {
               </button>
               <button
                 onClick={() =>
-                  onHandleReportAction(activeReportReason[0]?._id, "Ignore")
+                  onHandleReportAction(activeReportReason[0]?.lessonId, "Ignore")
                 }
                 className="px-4 py-2 text-[11px] font-black uppercase tracking-widest border-2 border-black dark:border-white bg-editorial-card dark:bg-editorial-dark-card hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
               >

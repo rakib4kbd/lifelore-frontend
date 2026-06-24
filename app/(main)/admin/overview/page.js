@@ -7,8 +7,6 @@ const DashboardAdminOverviewPage = async () => {
   const token = await getToken();
   const adminStats = await fetchAdminStats(token);
 
-  console.log(adminStats);
-
   const mergedData = {};
   adminStats?.userGrowthData?.forEach((item) => {
     if (!item.date) return;

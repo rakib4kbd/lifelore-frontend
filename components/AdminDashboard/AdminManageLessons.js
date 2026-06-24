@@ -2,6 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import { BookOpen, Trash2 } from "lucide-react";
+import Pagination from "@/components/ui/Pagination";
+
+const PAGE_SIZE = 10;
 import showAlertToast from "@/lib/showAlertToast";
 import showSuccessToast from "@/lib/showSuccessToast";
 import Link from "next/link";
@@ -23,7 +26,11 @@ const AdminManageLessons = ({
   const [lessons, setLessons] = useState(initialLessons || []);
   const [loading, setLoading] = useState(false);
   const [editingLesson, setEditingLesson] = useState(null);
+  const [page, setPage] = useState(1);
   const router = useRouter();
+
+  const totalPages = Math.ceil(lessons.length / PAGE_SIZE);
+  const pagedLessons = lessons.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const categories = [
     "Personal Growth",
@@ -238,7 +245,7 @@ const AdminManageLessons = ({
             </tbody>
           ) : (
             <tbody className="divide-y divide-black/10 dark:divide-white/10">
-              {lessons.map((lesson, idx) => (
+              {pagedLessons.map((lesson, idx) => (
                 <tr
                   key={lesson._id}
                   className={
@@ -456,6 +463,7 @@ const AdminManageLessons = ({
           </div>
         </div>
       )}
+      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} totalItems={lessons.length} pageSize={PAGE_SIZE} />
     </div>
   );
 };
